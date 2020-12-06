@@ -10,6 +10,7 @@ public enum CodeEnum {
     FAILD(400, "处理失败"),
     FAILD_LOGIN(444, "登录失败"),
     NOT_LOGIN(402,"暂未登录"),
+    Author_ERROR(403,"用户名不存在或密码错误"),
     API_PARAMETER_ERROR(500, "参数错误"),
     UNEXPECTED_ERROR(999, "未知错误"),
     REFULSE_REQUEST(777, "拒绝访问");

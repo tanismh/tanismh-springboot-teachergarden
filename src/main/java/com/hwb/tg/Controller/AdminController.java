@@ -1,5 +1,7 @@
 package com.hwb.tg.Controller;
 
+import com.hwb.tg.Model.CodeEnum;
+import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Shiro.UsernamePasswordTokenModel;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -25,38 +27,31 @@ public class AdminController {
      * @return
      */
     @PostMapping("/login")
-    public Map adminLogin(@RequestBody Map info){
-        HashMap<String, Object> ret = new HashMap<>();
+    public ReturnModel adminLogin(@RequestBody Map info){
+        ReturnModel returnModel ;
         String userName = "";
         String password = "";
         try{
             userName = (String) info.get("userName");
             password = (String) info.get("password");
         }catch (Error error){
-            ret.put("code",402);
-            ret.put("code","参数异常");
+            returnModel = new ReturnModel(CodeEnum.API_PARAMETER_ERROR);
         }catch (Exception error){
-            ret.put("code",402);
-            ret.put("code","参数异常");
+            returnModel = new ReturnModel(CodeEnum.API_PARAMETER_ERROR);
         }
 
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordTokenModel usernamePasswordToken = new UsernamePasswordTokenModel(userName, password, "admin");
         try {
             subject.login(usernamePasswordToken);
-            ret.put("code",200);
-            ret.put("code","登录成功");
+            returnModel = new ReturnModel(CodeEnum.SUCCESS);
         }catch (UnknownAccountException e){
-            ret.put("code",401);
-            ret.put("code","用户名不存在");
+            returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         }catch (IncorrectCredentialsException e){
-            ret.put("code",401);
-            ret.put("code","密码错误");
+            returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         }catch (Exception e){
-            System.out.println(e);
-            ret.put("code",401);
-            ret.put("code","出现异常");
+            returnModel = new ReturnModel(CodeEnum.FAILD);
         }
-        return ret;
+        return returnModel;
     }
 }

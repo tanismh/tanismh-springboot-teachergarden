@@ -1,6 +1,8 @@
 package com.hwb.tg.Controller;
 
 import com.alibaba.fastjson.JSON;
+import com.hwb.tg.Model.CodeEnum;
+import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Shiro.UsernamePasswordTokenModel;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -24,47 +26,28 @@ public class LoginController {
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public HashMap login(HttpServletRequest request, HttpServletResponse response, @RequestBody Map info){
-//        if (request.getMethod().equals("OPTIONS")) {
-//            response.setStatus(HttpServletResponse.SC_OK);
-//        }
+    public ReturnModel login(HttpServletRequest request, HttpServletResponse response, @RequestBody Map info){
 
         // todo  解析用户名、密码、角色
         String userName = ""+info.get("userName");
         String password = ""+info.get("password");
 
-        // todo 加上这一句ajax才能正常获取token
-        response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
-        response.setHeader("Access-Control-Allow-Credentials","true");
-        response.setHeader("Access-Control-Expose-Headers","Content-Type");
-
         // todo 返回的map
         HashMap<String, Object> ret = new HashMap<>();
         Subject subject = SecurityUtils.getSubject();
+        ReturnModel returnModel ;
         UsernamePasswordTokenModel usernamePasswordToken = new UsernamePasswordTokenModel(userName, password, "teacher");
         try {
             subject.login(usernamePasswordToken);
-            ret.put("code",200);
-            ret.put("code","登录成功");
-            System.out.println("登录成功");
+            returnModel = new ReturnModel(CodeEnum.SUCCESS);
         }catch (UnknownAccountException e){
-            ret.put("code",401);
-            ret.put("code","用户名不存在");
-            System.out.println("用户名不存在");
+            returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         }catch (IncorrectCredentialsException e){
-            ret.put("code",401);
-            ret.put("code","密码错误");
-            System.out.println("密码错误");
+            returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         }catch (Exception e){
-            ret.put("code",401);
-            ret.put("code","发生异常");
-            System.out.println("发生异常");
-        }catch (Error e){
-            System.out.println(e);
-            ret.put("msg","发生异常");
-            System.out.println("发生异常");
+            returnModel = new ReturnModel(CodeEnum.FAILD);
         }
-        return ret;
+        return returnModel;
 
     }
 
