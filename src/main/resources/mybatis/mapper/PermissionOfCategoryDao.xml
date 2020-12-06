@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwb.tgDao.PermissionOfCategoryDao">
+    <select id="checkPermissionOfTeacher" resultType="com.hwb.tg.Bean.PermissionOfCategory">
+        SELECT
+            permissionofcategory.*
+        FROM
+            permissionofcategory
+        WHERE
+            permissionofcategory.permissionId = #{param1} AND
+            permissionofcategory.categoryId = #{param2}
+    </select>
+
+    <select id="getPermissionCategoryByJobNumber" resultType="com.hwb.tg.pojo.CategoryReturn">
+        SELECT
+            category.*,
+            teacher.jobNumber
+        FROM
+            permissionofcategory
+            INNER JOIN
+            teacher
+            ON
+                permissionofcategory.permissionId = teacher.permissionId
+            INNER JOIN
+            category
+            ON
+                permissionofcategory.categoryId = category.categoryId
+        WHERE
+            teacher.jobNumber = #{param1}
+    </select>
+</mapper>

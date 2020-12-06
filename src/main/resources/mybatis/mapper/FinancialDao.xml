@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwb.tg.Dao.FinancialDao">
+    <resultMap type="com.hwb.tg.pojo.FinancialReturn" id="financialSelect">
+        <id column="month" property="month"/>
+        <id column="year" property="year"></id>
+        <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+            <result property="moneyAbstract" column="abstractFinancial"/>
+            <result property="money" column="money"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getFinancialByTeacherId" resultMap="financialSelect">
+        SELECT
+            *
+        FROM
+            financial
+        WHERE
+            financial.teacherId = #{param1}
+            AND ( financial.`year`, financial.`month` ) IN (
+            SELECT DISTINCT
+                `year`,
+                `month`
+            FROM
+                ( SELECT DISTINCT `year`,`month`  FROM financial where financial.teacherId = #{param1} LIMIT #{param2}, #{param3} ) AS f
+            WHERE
+                financial.teacherId = #{param1}
+            )
+    </select>
+
+    <select id="getFinancialLength" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+        ( SELECT DISTINCT `year`, `month` FROM financial WHERE financial.teacherId = #{param1} ) AS f
+
+    </select>
+
+    <select id="searchFinancialByTeacherIdAndYear" resultMap="financialSelect">
+        SELECT
+            *
+        FROM
+            financial
+        WHERE
+            financial.teacherId = #{param1}
+            AND ( financial.`year`, financial.`month` ) IN (
+            SELECT DISTINCT
+                `year`,
+                `month`
+            FROM
+                ( SELECT DISTINCT `year`,`month`  FROM financial  ) AS f
+            WHERE
+                financial.teacherId = #{param1}
+                and
+                financial.year = #{param4}
+            )
+    </select>
+
+    <select id="searchFinancialByTeacherIdAndMonth" resultMap="financialSelect">
+        SELECT
+            *
+        FROM
+            financial
+        WHERE
+            financial.teacherId = #{param1}
+            AND ( financial.`year`, financial.`month` ) IN (
+            SELECT DISTINCT
+                `year`,
+                `month`
+            FROM
+                ( SELECT DISTINCT `year`,`month`  FROM financial  ) AS f
+            WHERE
+                financial.teacherId = #{param1}
+                and
+                financial.month = #{param4}
+            )
+    </select>
+
+    <select id="searchFinancialByTeacherIdAndYearAndMonth" resultMap="financialSelect">
+        SELECT
+            *
+        FROM
+            financial
+        WHERE
+            financial.teacherId = #{param1}
+            AND ( financial.`year`, financial.`month` ) IN (
+            SELECT DISTINCT
+                `year`,
+                `month`
+            FROM
+                ( SELECT DISTINCT `year`,`month`  FROM financial  ) AS f
+            WHERE
+                financial.teacherId = #{param1}
+                and
+                financial.month = #{param5}
+                and
+                financial.year = #{param4}
+            )
+    </select>
+
+</mapper>

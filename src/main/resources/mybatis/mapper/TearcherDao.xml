@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwb.tg.Dao.TeacherDao">
+    <resultMap type="com.hwb.tg.pojo.TeacherInfoResult" id="teacherInfoMap">
+        <id column="teacherId" property="teacherId"/>
+        <result property="jobNumber" column="jobNumber"/>
+        <result property="teacherName"   column="name"/>
+        <result property="professional"  column="professional"/>
+        <result property="employmentDate"    column="employmentDate"/>
+        <result property="longTel"    column="longTel"/>
+        <result property="shortTel"    column="shortTel"/>
+        <result property="email"    column="email"/>
+        <result property="dingding"    column="dingding"/>
+        <result property="wechat"    column="wechat"/>
+        <result property="sex"    column="sex"/>
+    </resultMap>
+
+
+    <select id="teacherLoginByJobNumber" resultType="com.hwb.tg.pojo.TeacherLoginInfo">
+        SELECT
+            permission.role,
+            teacher.teacherId,
+            teacher.jobNumber,
+            teacher.`password`,
+            teacher.`name`
+        FROM
+            teacher
+            INNER JOIN
+            permission
+            ON
+                teacher.permissionId = permission.permissionId
+        where
+            jobNumber = #{param1}
+    </select>
+
+    <select id="getTeacherInfo" resultMap="teacherInfoMap" >
+        SELECT
+            teacher.teacherId,
+            teacher.jobNumber,
+            teacher.`password`,
+            teacher.`name`,
+            teacher.professional,
+            teacher.longTel,
+            DATE_FORMAT(teacher.employmentDate,'%Y-%c-%d') 'employmentDate',
+            teacher.shortTel,
+            teacher.email,
+            teacher.dingding,
+            teacher.wechat,
+            teacher.sex
+        FROM
+            teacher
+	    where   name = #{param1} and jobNumber = #{param2}
+    </select>
+
+    <select id="getTeacherIdByJobNumber" resultType="java.lang.Integer">
+        SELECT
+            teacher.teacherId
+        FROM
+            teacher
+        WHERE
+            teacher.jobNumber = #{param1}
+    </select>
+
+    <select id="getTeacherNameById" resultType="java.lang.String">
+        SELECT
+            teacher.`name`
+        FROM
+            teacher
+        WHERE
+            teacher.teacherId = #{param1}
+    </select>
+
+    <select id="getTeacherPermissionByJobNumber" resultType="java.lang.Integer">
+        SELECT
+            teacher.permissionId
+        FROM
+            teacher
+        WHERE
+            teacher.jobNumber = #{param1}
+    </select>
+
+    <select id="checkTeacherPsw" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            `teacher`
+        WHERE
+            teacher.jobNumber = #{param1}
+            AND
+            teacher.password = #{param2}
+    </select>
+
+    <update id="updatePsw">
+        update
+            teacher
+        set
+            password = #{param2}
+        where
+            jobNumber = #{param1}
+    </update>
+
+    <update id="updateTeacherInfo" parameterType="com.hwb.tg.pojo.UpdateTeacherInfoParam">
+        update
+            teacher
+        set
+            longTel = #{longTel},
+            shortTel = #{shortTel},
+            email = #{email},
+            dingding = #{dingding},
+            wechat = #{wechat}
+        where
+            jobNumber = #{jobNumber}
+    </update>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwb.tg.Dao.TokenDao">
+    <select id="validationToken" resultType="com.hwb.tg.Bean.Token">
+        select * from token where token = #{token}
+    </select>
+
+    <delete id="deletToken" >
+        delete from token where token = #{token}
+    </delete>
+
+</mapper>

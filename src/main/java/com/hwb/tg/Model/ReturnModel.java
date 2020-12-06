@@ -25,7 +25,7 @@ public class ReturnModel {
      * 无返回数据构造器
      * @param codeEnum
      */
-    ReturnModel(CodeEnum codeEnum){
+    public ReturnModel(CodeEnum codeEnum){
         this.code = codeEnum.getCode();
         this.msg = codeEnum.getMsg();
     }
@@ -35,7 +35,7 @@ public class ReturnModel {
      * @param codeEnum
      * @param data
      */
-    ReturnModel(CodeEnum codeEnum, Object data){
+    public ReturnModel(CodeEnum codeEnum, Object data){
         this.code = codeEnum.getCode();
         this.msg = codeEnum.getMsg();
         this.data = data;

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwb.tg.Dao.NewsDao">
+
+    <resultMap id="newsTilteList" type="com.hwb.tg.pojo.NewsTitleResult">
+        <id property="categoryId" column="categoryId"/>
+        <result property="className" column="className"/>
+        <collection property="newsTitleLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.NewsTitleList">
+            <id property="newId" column="newsId"></id>
+            <result property="newsTitle" column="newsTitle"/>
+            <result property="newsTime" column="publishTime"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="searchAllNewsMap" type="com.hwb.tg.pojo.NewsSearchAll">
+        <collection property="newsTitleLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.NewsTitleList">
+            <id property="newId" column="newsId"></id>
+            <result property="newsTitle" column="newsTitle"/>
+            <result property="newsTime" column="publishTime"/>
+        </collection>
+    </resultMap>
+
+    <select id="getNewsTitle" resultMap="newsTilteList">
+        SELECT
+            category.categoryId,
+            category.className,
+            news.newsId,
+            news.newsTitle,
+            news.publishTime
+        FROM
+            category
+            INNER JOIN
+            news
+            ON
+                category.categoryId = news.classId
+        WHERE
+            category.categoryId = #{param1}
+        ORDER BY
+            news.publishTime DESC
+        LIMIT #{param2}, #{param3}
+    </select>
+
+    <select id="getNewsDetail" resultType="com.hwb.tg.Bean.News">
+        SELECT
+            *
+        FROM
+            news
+        WHERE
+            news.newsId = #{param1}
+    </select>
+
+    <insert id="uploadNewsByTeacher" >
+        insert into
+            news(teacherId, newsTitle, classId, content)
+        values
+            (#{param1},#{param2},#{param3},#{param4})
+    </insert>
+
+
+    <select id="getNewsIdByaTeacherId" resultType="java.lang.Integer">
+        SELECT
+            news.teacherId
+        FROM
+            news
+        WHERE
+            news.newsId = #{param1}
+
+    </select>
+
+    <select id="getMyselfNewsTeacher"  resultMap="newsTilteList">
+        SELECT
+            category.categoryId,
+            category.className,
+            news.newsId,
+            news.newsTitle,
+            news.publishTime
+        FROM
+            category
+            INNER JOIN
+            news
+            ON
+                category.categoryId = news.classId
+        WHERE
+            category.categoryId = #{param1}
+            and
+            teacherId = #{param4}
+        ORDER BY
+            news.publishTime DESC
+        LIMIT #{param2}, #{param3}
+    </select>
+
+    <select id="searchALlNews" resultType="com.hwb.tg.pojo.NewsTitleList">
+        SELECT
+            news.newsId as newId,
+            news.newsTitle,
+            news.publishTime as newsTime
+        FROM
+            news
+        WHERE
+            news.content LIKE '%${param1}%'
+            OR
+	        news.newsTitle LIKE '%${param1}%'
+        ORDER BY
+            news.publishTime DESC
+        LIMIT #{param2}, #{param3}
+    </select>
+
+    <select id="searchALlNewsLength" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            news
+        WHERE
+            news.content LIKE '%${param1}%'
+            OR
+	        news.newsTitle LIKE '%${param1}%'
+    </select>
+
+    <select id="searchByNewsType" resultMap="newsTilteList">
+        SELECT
+            category.categoryId,
+            category.className,
+            news.newsId,
+            news.newsTitle,
+            news.publishTime
+        FROM
+            category
+            INNER JOIN
+            news
+            ON
+                category.categoryId = news.classId
+        WHERE
+            (
+                news.content LIKE '%${param1}%'
+                OR
+                news.content LIKE '%${param1}%'
+            )
+	        and
+	        category.categoryId = #{param2}
+        ORDER BY
+            news.publishTime DESC
+        LIMIT #{param3}, #{param4}
+    </select>
+
+    <select id="searchByNewsTypeLength" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            category
+            INNER JOIN
+            news
+            ON
+                category.categoryId = news.classId
+        WHERE
+            (
+                news.content LIKE '%${param1}%'
+                OR
+                news.newsTitle LIKE '%${param1}%'
+            )
+            and
+            category.categoryId = #{param2}
+    </select>
+
+    <select id="getNewsPublicTeacherId" parameterType="java.util.List" resultType="java.lang.Integer">
+        SELECT DISTINCT
+            news.teacherId
+        FROM
+            news
+        WHERE
+            <foreach collection="list" index="index" item="item" open="(" close=")" separator="or">
+                news.newsId = #{item}
+            </foreach>
+    </select>
+
+    <delete id="deleteMyNews" parameterType="java.util.List">
+        delete from news where
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator="or">
+            news.newsId = #{item}
+        </foreach>
+    </delete>
+
+    <select id="getCategoryPermissionOfTeacher" resultType="java.lang.Integer">
+        SELECT
+            permissionofcategory.categoryId
+        FROM
+            permissionofcategory
+            INNER JOIN
+            teacher
+            ON
+                permissionofcategory.permissionId = teacher.permissionId
+        WHERE
+            teacher.teacherId = #{param1}
+    </select>
+
+    <update id="updateNews">
+        update
+            news
+        SET
+            news.newsTitle = #{param2},
+            news.content = #{param3},
+            news.classId = #{param4}
+        where
+            news.newsId = #{param1}
+    </update>
+
+    <select id="getNewsLengthByNewsType" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            news
+        WHERE
+            news.classId = #{param1}
+    </select>
+
+    <select id="getNewsLengthByNewsTypeAndTeacherId"  resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            news
+        WHERE
+            news.classId = #{param1}
+            and
+            news.teacherId = #{param2}
+    </select>
+</mapper>

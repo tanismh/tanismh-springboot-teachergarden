@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwb.tg.Dao.AdminDao">
+    <select id="getLoginByUserName" resultType="com.hwb.tg.pojo.AdminLogin">
+        SELECT
+            admin.userName,
+            admin.adminId,
+            admin.`password`,
+            admin.department,
+            permission.role
+        FROM
+            permission
+            INNER JOIN
+            admin
+            ON
+                permission.permissionId = admin.permissionId
+        where
+            admin.userName = #{param1}
+    </select>
+
+    <select id="getAdminDepartmentById" resultType="java.lang.String">
+        SELECT
+            admin.department
+        FROM
+            admin
+        WHERE
+            admin.adminId = #{param1}
+    </select>
+
+</mapper>
