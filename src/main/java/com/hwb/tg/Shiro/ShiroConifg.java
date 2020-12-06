@@ -37,15 +37,16 @@ public class ShiroConifg {
         stringStringLinkedHashMap.put("/testLogin","anon");
         stringStringLinkedHashMap.put("/login","anon");
         stringStringLinkedHashMap.put("/admin/login","anon");
+        stringStringLinkedHashMap.put("/unLogin","anon");
         stringStringLinkedHashMap.put("/**","authc");
         bean.setFilterChainDefinitionMap(stringStringLinkedHashMap);
         bean.setLoginUrl("/unLogin");
         bean.setUnauthorizedUrl("/unauthorized");
 
-//        Map<String, Filter> filters = new HashMap<>(5);
-//        filters.put("authc", new UserFormAuthenticationFilter());
+        Map<String, Filter> filters = new HashMap<>(5);
+        filters.put("authc", new UserFormAuthenticationFilter());
 //        filters.put("perms", new CustomPermissionsAuthorizationFilter());
-//        bean.setFilters(filters);
+        bean.setFilters(filters);
         return bean;
     }
     //shiroDefaultManager
@@ -56,30 +57,30 @@ public class ShiroConifg {
         // 将我们继承后重写的shiro session 注册
         MySessionManager sessionManager = new MySessionManager();
 
-//        sessionManager.setSessionDAO(new EnterpriseCacheSessionDAO());
-//        Collection<SessionListener> sessionListeners = new ArrayList<>();
-////        sessionListeners.add(customSessionListener());
-//        sessionManager.setSessionListeners(sessionListeners);
-//        // 单位为毫秒，600000毫秒为1个小时
-//        sessionManager.setSessionValidationInterval(3600000 * 12);
-//        // 3600000 milliseconds = 1 hour
-//        sessionManager.setGlobalSessionTimeout(3600000 * 12);
-//        // 是否删除无效的，默认也是开启
-//        sessionManager.setDeleteInvalidSessions(true);
-//        // 是否开启 检测，默认开启
-//        sessionManager.setSessionValidationSchedulerEnabled(true);
-//        // 创建会话Cookie
-//        Cookie cookie = new SimpleCookie(ShiroHttpSession.DEFAULT_SESSION_ID_NAME);
-//        cookie.setName("WEBID");
-//        cookie.setHttpOnly(true);
-//        sessionManager.setSessionIdCookie(cookie);
-//
-//        // 单位为毫秒，600000毫秒为1个小时
-//        sessionManager.setSessionValidationInterval(3600000 * 12);
-//        // 3600000 milliseconds = 1 hour
-//        sessionManager.setGlobalSessionTimeout(3600000 * 12);
-//        // 是否删除无效的，默认也是开启
-//        sessionManager.setDeleteInvalidSessions(true);
+        sessionManager.setSessionDAO(new EnterpriseCacheSessionDAO());
+        Collection<SessionListener> sessionListeners = new ArrayList<>();
+//        sessionListeners.add(customSessionListener());
+        sessionManager.setSessionListeners(sessionListeners);
+        // 单位为毫秒，600000毫秒为1个小时
+        sessionManager.setSessionValidationInterval(3600000 * 12);
+        // 3600000 milliseconds = 1 hour
+        sessionManager.setGlobalSessionTimeout(3600000 * 12);
+        // 是否删除无效的，默认也是开启
+        sessionManager.setDeleteInvalidSessions(true);
+        // 是否开启 检测，默认开启
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+        // 创建会话Cookie
+        Cookie cookie = new SimpleCookie(ShiroHttpSession.DEFAULT_SESSION_ID_NAME);
+        cookie.setName("JSESSIONID");
+        cookie.setHttpOnly(true);
+        sessionManager.setSessionIdCookie(cookie);
+
+        // 单位为毫秒，600000毫秒为1个小时
+        sessionManager.setSessionValidationInterval(3600000 * 12);
+        // 3600000 milliseconds = 1 hour
+        sessionManager.setGlobalSessionTimeout(3600000 * 12);
+        // 是否删除无效的，默认也是开启
+        sessionManager.setDeleteInvalidSessions(true);
         return sessionManager;
     }
 

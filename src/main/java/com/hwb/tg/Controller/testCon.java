@@ -2,6 +2,7 @@ package com.hwb.tg.Controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ public class testCon {
         return ret;
     }
 
+    @RequiresPermissions("hhh")
     @RequestMapping("test")
     public Map test(){
         HashMap<String, Object> ret = new HashMap<>();

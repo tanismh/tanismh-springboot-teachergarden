@@ -20,14 +20,14 @@ public class ShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("授权");
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        String role = "";
+        String role = "hhh";
         Object principal = SecurityUtils.getSubject().getPrincipal();
 //        if (principal instanceof AdminLogin) {
 //            role = (String) ((AdminLogin) principal).getRole();
 //        } else {
 //            role = (String) ((TeacherLoginInfo) principal).getRole();
 //        }
-        simpleAuthorizationInfo.addRole(role);
+        simpleAuthorizationInfo.addStringPermission(role);
         return simpleAuthorizationInfo;
     }
 

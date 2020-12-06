@@ -1,5 +1,6 @@
 package com.hwb.tg.Shiro;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 //import net.sinorock.aj.common.constant.ErrorCodes;
 //import net.sinorock.aj.common.web.def.R;
@@ -10,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 
 /**
@@ -59,7 +61,10 @@ public class UserFormAuthenticationFilter extends FormAuthenticationFilter
 
             // 返回固定的JSON串
             WebUtils.toHttp(response).setContentType("application/json; charset=utf-8");
-//            WebUtils.toHttp(response).getWriter().print(JSONObject.toJSONString(R.error(ErrorCodes.General.AUTH_EMPTY_ERROR.getCode(),ErrorCodes.General.AUTH_EMPTY_ERROR.getMsg())));
+            HashMap<String, Object> ret = new HashMap<>();
+            ret.put("code",401);
+            ret.put("msg","未登录");
+            WebUtils.toHttp(response).getWriter().print(JSON.toJSONString(ret));
             return false;
         }
     }

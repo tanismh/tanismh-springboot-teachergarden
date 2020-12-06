@@ -11,6 +11,11 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * @author 何伟斌
  * @date 2020/12/5 21:35
@@ -43,23 +48,25 @@ public class CorsConfig {
         final CorsConfiguration config = new CorsConfiguration();
         // 允许cookies跨域
         config.setAllowCredentials(true);
-        // #允许向该服务器提交请求的URI，*表示全部允许，在SpringMVC中，如果设成*，会自动转成当前请求头中的Origin
-        config.addAllowedOrigin("http://localhost:63344");
-        // #允许访问的头信息,*表示全部
-        config.addAllowedHeader("*");
-        // 预检请求的缓存时间（秒），即在这个时间段里，对于相同的跨域请求不会再预检了
-        config.setMaxAge(3600L);
-        // 允许提交请求的方法，*表示全部允许
-        config.addAllowedMethod("OPTIONS");
-        config.addAllowedMethod("HEAD");
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("PATCH");
-        source.registerCorsConfiguration("/**", config);
 
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        FilterRegistrationBean bean = new FilterRegistrationBean(new Filter() {
+            @Override
+            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+                HttpServletRequest request = (HttpServletRequest)servletRequest;
+                HttpServletResponse response = (HttpServletResponse)servletResponse;
+                response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+                response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, token");
+                response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+                response.setHeader("Access-Control-Max-Age", "3600");
+                response.addHeader("Access-Control-Allow-Credentials", "true");
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application/json");
+                //此行代码确保请求可以继续执行至Controller
+                System.out.println(response.getHeader("Access-Control-Allow-Origin"));
+                filterChain.doFilter(request, response);
+
+            }
+        });
         // 设置监听器的优先级
         bean.setOrder(0);
 
