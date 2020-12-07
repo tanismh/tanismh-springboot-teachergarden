@@ -62,7 +62,7 @@ public class CorsConfig {
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json");
                 //此行代码确保请求可以继续执行至Controller
-                System.out.println(response.getHeader("Access-Control-Allow-Origin"));
+                System.out.println(System.getProperty("user.dir"));
                 filterChain.doFilter(request, response);
 
             }
