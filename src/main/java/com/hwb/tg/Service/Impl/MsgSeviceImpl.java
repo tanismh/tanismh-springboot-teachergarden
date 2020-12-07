@@ -1,8 +1,9 @@
-package com.hwb.tg.Service;
+package com.hwb.tg.Service.Impl;
 
 import com.hwb.tg.Bean.Msg;
 import com.hwb.tg.Dao.MsgDao;
 import com.hwb.tg.Dao.TeacherDao;
+import com.hwb.tg.Service.MsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

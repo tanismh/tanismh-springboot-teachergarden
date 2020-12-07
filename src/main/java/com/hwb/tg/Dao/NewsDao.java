@@ -3,10 +3,12 @@ package com.hwb.tg.Dao;
 import com.hwb.tg.Bean.News;
 import com.hwb.tg.pojo.NewsTitleList;
 import com.hwb.tg.pojo.NewsTitleResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface NewsDao {
     public NewsTitleResult getNewsTitle(Integer categoryId, Integer begin, Integer end);
     public News getNewsDetail(Integer NewsId);
