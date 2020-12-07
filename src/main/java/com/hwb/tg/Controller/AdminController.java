@@ -24,20 +24,21 @@ import java.util.Map;
 public class AdminController {
     /**
      * 管理员登录
+     *
      * @param info
      * @return
      */
     @PostMapping("/login")
-    public ReturnModel adminLogin(@RequestBody Map info){
-        ReturnModel returnModel ;
+    public ReturnModel adminLogin(@RequestBody Map info) {
+        ReturnModel returnModel;
         String userName = "";
         String password = "";
-        try{
+        try {
             userName = (String) info.get("userName");
             password = (String) info.get("password");
-        }catch (Error error){
+        } catch (Error error) {
             returnModel = new ReturnModel(CodeEnum.API_PARAMETER_ERROR);
-        }catch (Exception error){
+        } catch (Exception error) {
             returnModel = new ReturnModel(CodeEnum.API_PARAMETER_ERROR);
         }
 
@@ -45,14 +46,14 @@ public class AdminController {
         UsernamePasswordTokenModel usernamePasswordToken = new UsernamePasswordTokenModel(userName, password, "admin");
         try {
             subject.login(usernamePasswordToken);
-            Map retMap = new HashMap<String,String>();
-            retMap.put("role",((AdminLogin)subject.getPrincipal()).getRole());
-            returnModel = new ReturnModel(CodeEnum.SUCCESS,retMap);
-        }catch (UnknownAccountException e){
+            Map retMap = new HashMap<String, String>();
+            retMap.put("role", ((AdminLogin) subject.getPrincipal()).getRole());
+            returnModel = new ReturnModel(CodeEnum.SUCCESS, retMap);
+        } catch (UnknownAccountException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
-        }catch (IncorrectCredentialsException e){
+        } catch (IncorrectCredentialsException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
-        }catch (Exception e){
+        } catch (Exception e) {
             returnModel = new ReturnModel(CodeEnum.FAILD);
         }
         return returnModel;

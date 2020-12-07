@@ -22,21 +22,22 @@ public class MsgController {
 
     /**
      * 获取信息列表
-     * @param pageSize      页大小
-     * @param pageNumber    页码
+     *
+     * @param pageSize   页大小
+     * @param pageNumber 页码
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/getMsg",method = RequestMethod.GET)
+    @RequestMapping(value = "/getMsg", method = RequestMethod.GET)
     @RequiresRoles(value = {"role:teacher"})
     public Map getMsg(@RequestParam("pageSize") Integer pageSize,
-                      @RequestParam("pageNumber") Integer pageNumber){
+                      @RequestParam("pageNumber") Integer pageNumber) {
         String jobNumber = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber();
-        List<Msg> msgList = msgServiceImpl.getMsgList(jobNumber,pageSize,pageNumber);
+        List<Msg> msgList = msgServiceImpl.getMsgList(jobNumber, pageSize, pageNumber);
         HashMap<String, Object> returnMap = new HashMap<>();
-        returnMap.put("code",200);
-        returnMap.put("msg","查询成功");
-        returnMap.put("msgList",msgList);
+        returnMap.put("code", 200);
+        returnMap.put("msg", "查询成功");
+        returnMap.put("msgList", msgList);
         return returnMap;
     }
 }

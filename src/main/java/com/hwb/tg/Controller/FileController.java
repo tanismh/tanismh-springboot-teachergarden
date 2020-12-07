@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 public class FileController {
     @RequestMapping("/uploadFile")
-    public Map uploadFile(HttpServletRequest request, MultipartFile file){
+    public Map uploadFile(HttpServletRequest request, MultipartFile file) {
         HashMap<String, Object> ret = new HashMap<>();
         if (file == null) {
             ret.put("type", "error");
@@ -29,8 +29,8 @@ public class FileController {
         }
         //获取文件后缀
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
-        String savePath = System.getProperty("user.dir")+ "/target/classes/static/file/";
-        String fname = file.getOriginalFilename().substring(0,file.getOriginalFilename().lastIndexOf("."));
+        String savePath = System.getProperty("user.dir") + "/target/classes/static/file/";
+        String fname = file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf("."));
         File savePathFile = new File(savePath);
         if (!savePathFile.exists()) {
             //若不存在该目录，则创建目录
@@ -48,8 +48,8 @@ public class FileController {
             e.printStackTrace();
             return ret;
         }
-        ret.put("location", "http://47.97.97.208:8082/ssm_learning/statics/file/"+filename);
-        ret.put("name",fname);
+        ret.put("location", "http://47.97.97.208:8082/ssm_learning/file/" + filename);
+        ret.put("name", fname);
         return ret;
     }
 }

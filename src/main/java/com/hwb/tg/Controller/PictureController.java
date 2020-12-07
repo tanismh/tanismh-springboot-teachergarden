@@ -63,7 +63,7 @@ public class PictureController {
         }
         ret.put("errno", 0);
         ret.put("msg", "上传图片成功！");
-        ret.put("location","http://47.97.97.208:8082/ssm_learning/statics/picture/"+filename);
+        ret.put("location","http://47.97.97.208:8082/ssm_learning/picture/"+filename);
         ret.put("name",fname);
         return ret;
     }

@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 public class TokenController {
     @RequestMapping(value = "/checkToken", method = RequestMethod.POST)
-    public Map checkToken(@RequestHeader("token") String token){
+    public Map checkToken() {
         HashMap<String, Object> ret = new HashMap<>();
         ret.put("code", 200);
         ret.put("isUse", true);

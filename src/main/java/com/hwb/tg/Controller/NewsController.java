@@ -8,6 +8,7 @@ import com.hwb.tg.pojo.NewsContentResult;
 import com.hwb.tg.pojo.NewsTitleResult;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -71,8 +72,7 @@ public class NewsController {
 
     @ResponseBody
     @RequestMapping(value = "/uploadNews", method = RequestMethod.POST)
-    public Map uploadNews(@RequestHeader("token") String token,
-                          @RequestBody News newsInfo) {
+    public Map uploadNews(@RequestBody News newsInfo) {
         HashMap<String, Object> ret = new HashMap<>();
         try {
             String role = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getRole();
@@ -115,8 +115,7 @@ public class NewsController {
 
     @ResponseBody
     @RequestMapping(value = "/deleteMyNewsTeacher", method = RequestMethod.POST)
-    public Map deleteMyNews(@RequestHeader("token") String token,
-                            @RequestBody Map deletInfo) {
+    public Map deleteMyNews(@RequestBody Map deletInfo) {
         HashMap<String, Object> ret = new HashMap<>();
         String jobNumber = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber();
         Integer teacherId = teacherDao.getTeacherIdByJobNumber(jobNumber);
@@ -133,8 +132,7 @@ public class NewsController {
 
     @ResponseBody
     @RequestMapping(value = "/changeMyUp", method = RequestMethod.POST)
-    public Map changeMyUp(@RequestHeader("token") String token,
-                          @RequestBody Map changeInfo) {
+    public Map changeMyUp(@RequestBody Map changeInfo) {
         HashMap<String, Object> ret = new HashMap<>();
         String role = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getRole();
         String jobNumber = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber();

@@ -22,8 +22,7 @@ public class FinancialController {
 
     @RequestMapping(value = "/getFinancial", method = RequestMethod.GET)
     @RequiresRoles(value = {"role:teacher"})
-    public Map getFinancial(@RequestHeader("token") String token,
-                            @RequestParam(value = "pageSize",required = false) Integer pageSize,
+    public Map getFinancial(@RequestParam(value = "pageSize",required = false) Integer pageSize,
                             @RequestParam(value = "pageNumber",required = false) Integer pageNumber){
         if (pageNumber == 0)
             pageNumber = 1;
@@ -51,8 +50,7 @@ public class FinancialController {
 
     @GetMapping("/searchFinancial")
     @RequiresRoles(value = {"role:teacher"})
-    public Map searchFinancial(@RequestHeader("token") String token,
-                               @RequestParam(value = "year",required = false) Integer year,
+    public Map searchFinancial(@RequestParam(value = "year",required = false) Integer year,
                                @RequestParam(value = "month",required = false) Integer month,
                                @RequestParam(value = "pageNumber",required = false) Integer pageNumber,
                                @RequestParam(value = "pageSize",required = false) Integer pageSize){

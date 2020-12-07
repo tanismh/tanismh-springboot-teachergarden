@@ -16,17 +16,18 @@ import java.util.Map;
 public class TeacherController {
     @Autowired
     TeacherService teacherServiceImpl;
+
     /**
      * 获取教师的全部信息
-     * @param token
+     *
      * @return
      */
     @ResponseBody
     @RequiresRoles("role:teacher")
-    @RequestMapping(value = "/getTeacherInfo",method = RequestMethod.POST)
-    public Map getTeacherInfo(@RequestHeader("token") String token){
+    @RequestMapping(value = "/getTeacherInfo", method = RequestMethod.POST)
+    public Map getTeacherInfo() {
         HashMap<String, Object> returnMap = new HashMap<>();
-        returnMap.put("info",(TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal());
+        returnMap.put("info", (TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal());
         return returnMap;
     }
 
@@ -34,29 +35,28 @@ public class TeacherController {
     @ResponseBody
     @RequiresRoles("role:teacher")
     @RequestMapping(value = "/teacherResetPsw", method = RequestMethod.POST)
-    public Map teacherResetPsw(@RequestHeader("token") String token,
-                               @RequestBody Map info){
+    public Map teacherResetPsw(@RequestBody Map info) {
         HashMap<String, Object> ret = new HashMap<>();
         String newsPsw = (String) info.get("newPsw");
         String confirmPsw = (String) info.get("confirmPsw");
         String oldPsw = (String) info.get("oldPsw");
-        if (teacherServiceImpl.checkTeacherPsw(((TeacherLoginInfo)SecurityUtils.getSubject().getPrincipal()).getJobNumber(), oldPsw)){
-            if (newsPsw.equals(confirmPsw)){
-                if (newsPsw == ""){
+        if (teacherServiceImpl.checkTeacherPsw(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber(), oldPsw)) {
+            if (newsPsw.equals(confirmPsw)) {
+                if (newsPsw == "") {
                     ret.put("code", 303);
                     ret.put("msg", "密码不能为空");
-                }else{
-                    teacherServiceImpl.checkTeacherPsw(((TeacherLoginInfo)SecurityUtils.getSubject().getPrincipal()).getJobNumber(), newsPsw);
+                } else {
+                    teacherServiceImpl.checkTeacherPsw(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber(), newsPsw);
                     ret.put("code", 200);
                     ret.put("msg", "修改成功");
                 }
-            }else {
+            } else {
                 ret.put("code", 302);
                 ret.put("msg", "两次密码不一致");
             }
-        }else{
+        } else {
             ret.put("code", 301);
-            ret.put("msg","旧密码不正确");
+            ret.put("msg", "旧密码不正确");
         }
         return ret;
     }
@@ -64,13 +64,12 @@ public class TeacherController {
 
     @ResponseBody
     @RequestMapping(value = "/changeInfo", method = RequestMethod.POST)
-    public Map changeInfo(@RequestHeader("token")  String token ,
-                          @RequestBody UpdateTeacherInfoParam updateTeacherInfoParam){
+    public Map changeInfo(@RequestBody UpdateTeacherInfoParam updateTeacherInfoParam) {
         HashMap<String, Object> ret = new HashMap<>();
-        updateTeacherInfoParam.setJobNumber(((TeacherLoginInfo)SecurityUtils.getSubject().getPrincipal()).getJobNumber());
+        updateTeacherInfoParam.setJobNumber(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber());
         teacherServiceImpl.updateInfo(updateTeacherInfoParam);
-        ret.put("code",200);
-        ret.put("msg","修改成功");
+        ret.put("code", 200);
+        ret.put("msg", "修改成功");
         return ret;
     }
 
