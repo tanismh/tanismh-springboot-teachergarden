@@ -19,9 +19,11 @@ public interface CategoryService {
     public List<Category> getElse();
 
     /**
-     * 获取教师有权限修改的类目
+     * 获取教师有权限修改的类目(用工号)
      * @param jobNumebr
      * @return
      */
     public List<CategoryReturn> getPermissionCategory(String jobNumebr);
+
+    public List<CategoryReturn> getPermissionCategoryByAdminId(Integer adminId);
 }

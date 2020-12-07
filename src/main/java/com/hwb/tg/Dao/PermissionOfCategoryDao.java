@@ -10,4 +10,5 @@ import java.util.List;
 public interface PermissionOfCategoryDao {
     public PermissionOfCategory checkPermissionOfTeacher(Integer permissionId, Integer categoryId);
     public List<CategoryReturn> getPermissionCategoryByJobNumber(String jobNumber);
+    public List<CategoryReturn> getPermissionCategoryByAdminId(Integer adminId);
 }

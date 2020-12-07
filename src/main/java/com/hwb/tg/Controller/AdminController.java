@@ -3,6 +3,7 @@ package com.hwb.tg.Controller;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Shiro.UsernamePasswordTokenModel;
+import com.hwb.tg.pojo.AdminLogin;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -44,7 +45,9 @@ public class AdminController {
         UsernamePasswordTokenModel usernamePasswordToken = new UsernamePasswordTokenModel(userName, password, "admin");
         try {
             subject.login(usernamePasswordToken);
-            returnModel = new ReturnModel(CodeEnum.SUCCESS);
+            Map retMap = new HashMap<String,String>();
+            retMap.put("role",((AdminLogin)subject.getPrincipal()).getRole());
+            returnModel = new ReturnModel(CodeEnum.SUCCESS,retMap);
         }catch (UnknownAccountException e){
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         }catch (IncorrectCredentialsException e){

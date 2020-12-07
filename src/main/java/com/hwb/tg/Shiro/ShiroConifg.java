@@ -39,13 +39,14 @@ public class ShiroConifg {
         stringStringLinkedHashMap.put("/admin/login","anon");
         stringStringLinkedHashMap.put("/unLogin","anon");
         stringStringLinkedHashMap.put("/**","authc");
+        stringStringLinkedHashMap.put("/druid/*","anon");
         bean.setFilterChainDefinitionMap(stringStringLinkedHashMap);
         bean.setLoginUrl("/unLogin");
         bean.setUnauthorizedUrl("/unauthorized");
 
         Map<String, Filter> filters = new HashMap<>(5);
         filters.put("authc", new UserFormAuthenticationFilter());
-//        filters.put("perms", new CustomPermissionsAuthorizationFilter());
+        filters.put("roles", new CustomRolesAuthorizationFilter());
         bean.setFilters(filters);
         return bean;
     }

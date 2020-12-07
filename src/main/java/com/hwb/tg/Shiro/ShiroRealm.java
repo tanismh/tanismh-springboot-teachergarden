@@ -24,14 +24,14 @@ public class ShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("授权");
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        String role = "hhh";
+        String role = "";
         Object principal = SecurityUtils.getSubject().getPrincipal();
-//        if (principal instanceof AdminLogin) {
-//            role = (String) ((AdminLogin) principal).getRole();
-//        } else {
-//            role = (String) ((TeacherLoginInfo) principal).getRole();
-//        }
-        simpleAuthorizationInfo.addStringPermission(role);
+        if (principal instanceof AdminLogin) {
+            role = (String) ((AdminLogin) principal).getRole();
+        } else {
+            role = (String) ((TeacherLoginInfo) principal).getRole();
+        }
+        simpleAuthorizationInfo.addRole(role);
         return simpleAuthorizationInfo;
     }
 
@@ -52,7 +52,7 @@ public class ShiroRealm extends AuthorizingRealm {
             if (teacherInfo == null) {
                 throw new UnknownAccountException();
             }
-            return new SimpleAuthenticationInfo("", "123456a", "ShiroRealm");
+            return new SimpleAuthenticationInfo(teacherInfo, "123456a", "ShiroRealm");
         }
     }
 

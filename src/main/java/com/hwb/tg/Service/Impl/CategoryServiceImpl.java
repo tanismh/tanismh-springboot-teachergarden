@@ -32,4 +32,9 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryReturn> getPermissionCategory(String jobNumebr) {
         return permissionOfCategoryDao.getPermissionCategoryByJobNumber(jobNumebr);
     }
+
+    @Override
+    public List<CategoryReturn> getPermissionCategoryByAdminId(Integer adminId) {
+        return permissionOfCategoryDao.getPermissionCategoryByAdminId(adminId);
+    }
 }

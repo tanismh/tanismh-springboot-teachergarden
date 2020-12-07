@@ -1,6 +1,8 @@
 package com.hwb.tg.Shiro;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hwb.tg.Model.CodeEnum;
+import com.hwb.tg.Model.ReturnModel;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -47,18 +49,15 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
         if (subject.getPrincipal() != null) {
             return true;
         } else {
-
             //解决 WebUtils.toHttp 往返回response写数据跨域问题
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             String origin = httpRequest.getHeader("Origin");
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
             httpServletResponse.setHeader("Access-Control-Allow-Origin", origin);
-            //通过对 Credentials 参数的设置，就可以保持跨域 Ajax 时的 Cookie
-            //设置了Allow-Credentials，Allow-Origin就不能为*,需要指明具体的url域
-//            httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
             WebUtils.toHttp(response).setContentType("application/json; charset=utf-8");
-//            WebUtils.toHttp(response).getWriter().print(JSONObject.toJSONString(R.error(ErrorCodes.General.AUTH_EMPTY_ERROR.getCode(),ErrorCodes.General.AUTH_EMPTY_ERROR.getMsg())));
+            ReturnModel returnModel = new ReturnModel(CodeEnum.REFULSE_REQUEST);
+            WebUtils.toHttp(response).getWriter().print(JSONObject.toJSONString(returnModel));
         }
         return false;
     }

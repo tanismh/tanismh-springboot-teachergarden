@@ -57,9 +57,6 @@ public class UserFormAuthenticationFilter extends FormAuthenticationFilter
             String origin = httpRequest.getHeader("Origin");
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
             httpServletResponse.setHeader("Access-Control-Allow-Origin", origin);
-            //通过对 Credentials 参数的设置，就可以保持跨域 Ajax 时的 Cookie
-            //设置了Allow-Credentials，Allow-Origin就不能为*,需要指明具体的url域
-//            httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
             // 返回固定的JSON串
             WebUtils.toHttp(response).setContentType("application/json; charset=utf-8");
