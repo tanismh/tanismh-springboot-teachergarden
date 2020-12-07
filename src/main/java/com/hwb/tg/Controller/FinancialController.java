@@ -6,6 +6,7 @@ import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.pojo.FinancialReturn;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class FinancialController {
     FinancialService financialServiceImpl;
 
     @RequestMapping(value = "/getFinancial", method = RequestMethod.GET)
+    @RequiresRoles(value = {"role:teacher"})
     public Map getFinancial(@RequestHeader("token") String token,
                             @RequestParam(value = "pageSize",required = false) Integer pageSize,
                             @RequestParam(value = "pageNumber",required = false) Integer pageNumber){
@@ -48,6 +50,7 @@ public class FinancialController {
     }
 
     @GetMapping("/searchFinancial")
+    @RequiresRoles(value = {"role:teacher"})
     public Map searchFinancial(@RequestHeader("token") String token,
                                @RequestParam(value = "year",required = false) Integer year,
                                @RequestParam(value = "month",required = false) Integer month,
