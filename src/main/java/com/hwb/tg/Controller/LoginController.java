@@ -5,6 +5,7 @@ import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Shiro.UsernamePasswordTokenModel;
 import com.hwb.tg.pojo.AdminLogin;
+import com.hwb.tg.pojo.TeacherLoginInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -40,6 +41,7 @@ public class LoginController {
         UsernamePasswordTokenModel usernamePasswordToken = new UsernamePasswordTokenModel(userName, password, "teacher");
         try {
             subject.login(usernamePasswordToken);
+            ((TeacherLoginInfo)subject.getPrincipal()).setPassword("");
             returnModel = new ReturnModel(CodeEnum.SUCCESS);
         }catch (UnknownAccountException e){
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
