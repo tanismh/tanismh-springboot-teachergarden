@@ -6,9 +6,11 @@ import com.hwb.tg.Dao.CategoryDao;
 import com.hwb.tg.Dao.NewsDao;
 import com.hwb.tg.Dao.TeacherDao;
 import com.hwb.tg.Service.NewsService;
+import com.hwb.tg.pojo.AdminLogin;
 import com.hwb.tg.pojo.NewsContentResult;
 import com.hwb.tg.pojo.NewsTitleList;
 import com.hwb.tg.pojo.NewsTitleResult;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,13 +49,24 @@ public class NewsServiceImpl implements NewsService {
                         newsType,
                         (pageNumber - 1) * pageSize,
                         pageSize,
-                        teacherDao.getTeacherIdByJobNumber(jobNumber))
-                ;
+                        teacherDao.getTeacherIdByJobNumber(jobNumber));
                 if (newsTitle == null) {
                     newsTitle = new NewsTitleResult();
                     newsTitle.setNewsListLength(0);
                 } else {
                     newsTitle.setNewsListLength(newsDao.getNewsLengthByNewsTypeAndTeacherId(newsType, teacherDao.getTeacherIdByJobNumber(jobNumber)));
+                }
+            } else {
+                newsTitle = newsDao.getMyselfNewsAdmin(
+                        newsType,
+                        (pageNumber - 1) * pageSize,
+                        pageSize,
+                        ((AdminLogin) SecurityUtils.getSubject().getSession()).getAdminId());
+                if (newsTitle == null) {
+                    newsTitle = new NewsTitleResult();
+                    newsTitle.setNewsListLength(0);
+                } else {
+                    newsTitle.setNewsListLength(newsDao.getNewsLengthByNewsTypeAndAdminId(newsType, teacherDao.getTeacherIdByJobNumber(((AdminLogin) SecurityUtils.getSubject().getSession()).getAdminId() + "")));
                 }
             }
         } else {

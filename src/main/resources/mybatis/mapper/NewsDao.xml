@@ -92,6 +92,28 @@
         LIMIT #{param2}, #{param3}
     </select>
 
+
+    <select id="getMyselfNewsAdmin" resultMap="newsTilteList">
+        SELECT
+            category.categoryId,
+            category.className,
+            news.newsTitle,
+            news.newsId,
+            news.publishTime
+        FROM
+            news
+            INNER JOIN
+            category
+            ON
+                news.classId = category.categoryId
+        WHERE
+            adminId = #{param4} AND
+            news.classId = #{param1}
+        ORDER BY
+            news.publishTime DESC
+        LIMIT #{param2}, #{param3}
+    </select>
+
     <select id="searchALlNews" resultType="com.hwb.tg.pojo.NewsTitleList">
         SELECT
             news.newsId as newId,
@@ -225,4 +247,17 @@
             and
             news.teacherId = #{param2}
     </select>
+
+    <select id="getNewsLengthByNewsTypeAndAdminId" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            news
+        WHERE
+            news.classId = #{param1}
+            and
+            news.adminId = #{param2}
+    </select>
+
+
 </mapper>

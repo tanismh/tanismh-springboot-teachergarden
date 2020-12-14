@@ -25,4 +25,6 @@ public interface NewsDao {
     public Integer getNewsLengthByNewsTypeAndTeacherId(Integer newsType, Integer teacherId);
     public Integer searchALlNewsLength(@Param("param1") String key);
     public Integer searchByNewsTypeLength(@Param("param1") String key, Integer newsType);
+    public NewsTitleResult getMyselfNewsAdmin(Integer categoryId, Integer begin, Integer end, Integer adminId);
+    public Integer getNewsLengthByNewsTypeAndAdminId(Integer newsType, Integer teacherId);
 }

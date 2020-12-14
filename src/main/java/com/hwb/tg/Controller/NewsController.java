@@ -4,6 +4,7 @@ import com.hwb.tg.Bean.News;
 import com.hwb.tg.Dao.TeacherDao;
 import com.hwb.tg.Service.NewsService;
 import com.hwb.tg.Service.TeacherService;
+import com.hwb.tg.pojo.AdminLogin;
 import com.hwb.tg.pojo.NewsContentResult;
 import com.hwb.tg.pojo.NewsTitleResult;
 import com.hwb.tg.pojo.TeacherLoginInfo;
@@ -47,10 +48,18 @@ public class NewsController {
         HashMap<String, Object> returnMap = new HashMap<>();
         returnMap.put("code", 200);
         returnMap.put("msg", "请求成功");
-        String role = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getRole();
+        String role = null;
+        try {
+            role = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getRole();
+        }catch (ClassCastException e){
+            role = ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getRole();
+        }
         if (flag == null)
             flag = 2;
-        returnMap.put("result", newsServiceImpl.getNewsTitleList(newsType, pageSize, pageNumber, role, ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber(), flag));
+        if (role.contains("teacher"))
+            returnMap.put("result", newsServiceImpl.getNewsTitleList(newsType, pageSize, pageNumber, role, ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber(), flag));
+        else
+            returnMap.put("result", newsServiceImpl.getNewsTitleList(newsType, pageSize, pageNumber, role, ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId()+"", flag));
         return returnMap;
     }
 

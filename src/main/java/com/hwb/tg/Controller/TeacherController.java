@@ -1,6 +1,7 @@
 package com.hwb.tg.Controller;
 
 import com.hwb.tg.Service.TeacherService;
+import com.hwb.tg.pojo.TeacherInfo;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import com.hwb.tg.pojo.UpdateTeacherInfoParam;
 import org.apache.shiro.SecurityUtils;
@@ -27,7 +28,10 @@ public class TeacherController {
     @RequestMapping(value = "/getTeacherInfo", method = RequestMethod.POST)
     public Map getTeacherInfo() {
         HashMap<String, Object> returnMap = new HashMap<>();
-        returnMap.put("info", (TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal());
+        TeacherInfo teacherInfoByTeacherId = teacherServiceImpl.getTeacherInfoByTeacherId(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getTeacherId());
+        teacherInfoByTeacherId.setLoginTime(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getLoginTime());
+        teacherInfoByTeacherId.setName(teacherInfoByTeacherId.getTeacherName());
+        returnMap.put("info", teacherInfoByTeacherId);
         return returnMap;
     }
 

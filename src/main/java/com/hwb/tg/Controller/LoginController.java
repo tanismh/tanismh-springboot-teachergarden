@@ -35,6 +35,8 @@ public class LoginController {
         String userName = "" + info.get("userName");
         String password = "" + info.get("password");
 
+        response.setHeader("Access-Control-Expose-Headers","token");
+
         // todo 返回的map
         HashMap<String, Object> ret = new HashMap<>();
         Subject subject = SecurityUtils.getSubject();
@@ -43,12 +45,16 @@ public class LoginController {
         try {
             subject.login(usernamePasswordToken);
             ((TeacherLoginInfo) subject.getPrincipal()).setPassword("");
+            response.addHeader("token", (String) subject.getSession().getId());
             returnModel = new ReturnModel(CodeEnum.SUCCESS);
         } catch (UnknownAccountException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         } catch (IncorrectCredentialsException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         } catch (Exception e) {
+            System.out.println("_________________________________________________");
+            System.out.println(e);
+            System.out.println("_________________________________________________");
             returnModel = new ReturnModel(CodeEnum.FAILD);
         }
         return returnModel;

@@ -1,6 +1,7 @@
 package com.hwb.tg.Service;
 
 
+import com.hwb.tg.pojo.TeacherInfo;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import com.hwb.tg.pojo.UpdateTeacherInfoParam;
 
@@ -51,4 +52,11 @@ public interface TeacherService {
      * @param updateTeacherInfoParam
      */
     public void updateInfo(UpdateTeacherInfoParam updateTeacherInfoParam);
+
+    /**
+     * 根据教师Id获取教师信息
+     * @param teacherId     教师Id
+     * @return
+     */
+    public TeacherInfo getTeacherInfoByTeacherId(Integer teacherId);
 }

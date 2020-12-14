@@ -4,6 +4,7 @@ import com.hwb.tg.Bean.PermissionOfCategory;
 import com.hwb.tg.Dao.PermissionOfCategoryDao;
 import com.hwb.tg.Dao.TeacherDao;
 import com.hwb.tg.Service.TeacherService;
+import com.hwb.tg.pojo.TeacherInfo;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import com.hwb.tg.pojo.UpdateTeacherInfoParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +67,16 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void updateInfo(UpdateTeacherInfoParam  updateTeacherInfoParam){
         teacherDao.updateTeacherInfo(updateTeacherInfoParam);
+    }
+
+    /**
+     * 根据教师Id获取教师信息
+     *
+     * @param teacherId 教师Id
+     * @return
+     */
+    @Override
+    public TeacherInfo getTeacherInfoByTeacherId(Integer teacherId) {
+        return teacherDao.getTeacherInfo(teacherId);
     }
 }
