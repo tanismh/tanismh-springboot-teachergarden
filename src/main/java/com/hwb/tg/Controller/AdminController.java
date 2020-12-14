@@ -23,7 +23,6 @@ import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/admin")
 public class AdminController {
     /**
      * 管理员登录
@@ -31,7 +30,7 @@ public class AdminController {
      * @param info
      * @return
      */
-    @PostMapping("/login")
+    @PostMapping("/admin/login")
     public ReturnModel adminLogin(HttpServletResponse response,
                                   @RequestBody Map info) {
         ReturnModel returnModel;
@@ -65,7 +64,7 @@ public class AdminController {
         return returnModel;
     }
 
-    @PostMapping("/getInfo")
+    @PostMapping("/getCmgInfo")
     @RequiresRoles(value = {"role:admin", "role:bigAdmin"},logical = Logical.OR)
     public ReturnModel getInfo(){
         AdminLogin adminLogin = (AdminLogin) SecurityUtils.getSubject().getPrincipal();

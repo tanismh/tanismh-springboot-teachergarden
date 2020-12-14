@@ -61,12 +61,12 @@ public class NewsServiceImpl implements NewsService {
                         newsType,
                         (pageNumber - 1) * pageSize,
                         pageSize,
-                        ((AdminLogin) SecurityUtils.getSubject().getSession()).getAdminId());
+                        ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId());
                 if (newsTitle == null) {
                     newsTitle = new NewsTitleResult();
                     newsTitle.setNewsListLength(0);
                 } else {
-                    newsTitle.setNewsListLength(newsDao.getNewsLengthByNewsTypeAndAdminId(newsType, teacherDao.getTeacherIdByJobNumber(((AdminLogin) SecurityUtils.getSubject().getSession()).getAdminId() + "")));
+                    newsTitle.setNewsListLength(newsDao.getNewsLengthByNewsTypeAndAdminId(newsType, teacherDao.getTeacherIdByJobNumber(((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId() + "")));
                 }
             }
         } else {
@@ -179,5 +179,18 @@ public class NewsServiceImpl implements NewsService {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 验证是否有删除权限（子管理员）
+     * 【废弃】
+     * @param newsIds
+     * @param AdminId
+     * @return
+     */
+    @Override
+    public boolean checkDeletePermissionAdmin(Integer AdminId ,List<Integer> newsIds) {
+
+        return false;
     }
 }

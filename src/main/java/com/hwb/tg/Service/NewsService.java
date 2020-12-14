@@ -72,7 +72,7 @@ public interface NewsService {
                                             List<Integer> newsIds);
 
     /**
-     * 删除自己发布
+     * 删除发布
      *
      * @param newsIds
      */
@@ -101,4 +101,13 @@ public interface NewsService {
     public boolean checkChangeCategory(Integer teacherId,
                                        Integer newsType);
 
+    /**
+     * 验证是否有删除权限（子管理员）
+     * 【废弃】
+     * @param newsIds
+     * @param AdminId
+     * @return
+     */
+    public boolean checkDeletePermissionAdmin(Integer AdminId,
+                                              List<Integer> newsIds);
 }

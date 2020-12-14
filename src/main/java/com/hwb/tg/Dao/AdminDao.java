@@ -2,12 +2,14 @@ package com.hwb.tg.Dao;
 
 import com.hwb.tg.pojo.AdminLogin;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author 何伟斌
  * @date 2020/11/29 16:48
  */
 @Mapper
+@Repository
 public interface AdminDao {
     /**
      * 登录使用 根据用户名获取用户信息
