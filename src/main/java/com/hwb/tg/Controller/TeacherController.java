@@ -50,7 +50,7 @@ public class TeacherController {
                     ret.put("code", 303);
                     ret.put("msg", "密码不能为空");
                 } else {
-                    teacherServiceImpl.checkTeacherPsw(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber(), newsPsw);
+                    teacherServiceImpl.updatePsw(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber(), newsPsw);
                     ret.put("code", 200);
                     ret.put("msg", "修改成功");
                 }
