@@ -30,7 +30,7 @@ public class TeacherController {
         HashMap<String, Object> returnMap = new HashMap<>();
         TeacherInfo teacherInfoByTeacherId = teacherServiceImpl.getTeacherInfoByTeacherId(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getTeacherId());
         teacherInfoByTeacherId.setLoginTime(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getLoginTime());
-        teacherInfoByTeacherId.setName(teacherInfoByTeacherId.getTeacherName());
+        teacherInfoByTeacherId.setTeacherName(teacherInfoByTeacherId.getName());
         returnMap.put("info", teacherInfoByTeacherId);
         return returnMap;
     }
