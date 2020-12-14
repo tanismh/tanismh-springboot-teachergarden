@@ -37,3 +37,7 @@ spring:
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
+server:
+  servlet:
+    context-path: /ssm_learning
+  port: 8082

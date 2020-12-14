@@ -2,9 +2,11 @@ package com.hwb.tg.Dao;
 
 
 import com.hwb.tg.pojo.FinancialReturn;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface FinancialDao {
     public List<FinancialReturn> getFinancialByTeacherId(Integer teacherId, Integer begin, Integer pageSize);
     public List<FinancialReturn> searchFinancialByTeacherIdAndYear(Integer teacherId, Integer begin, Integer pageSize, Integer year);

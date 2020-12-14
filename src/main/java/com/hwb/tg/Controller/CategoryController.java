@@ -28,11 +28,12 @@ public class CategoryController {
 
     /**
      * 获取其他类目
+     *
      * @return
      */
-    @RequiresRoles(value = {"role:teacher","role:admin","role:bigAdmin"},logical = Logical.OR)
-    @RequestMapping(value = "/getElse",method = RequestMethod.POST)
-    public Map getElse(HttpServletRequest request, HttpServletResponse response){
+    @RequiresRoles(value = {"role:teacher", "role:admin", "role:bigAdmin"}, logical = Logical.OR)
+    @RequestMapping(value = "/getElse", method = RequestMethod.POST)
+    public Map getElse(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> ret = new HashMap<>();
         ret.put("code", 200);
         ret.put("result", categoryServiceImpl.getElse());
@@ -41,27 +42,29 @@ public class CategoryController {
 
     /**
      * 获取教师有权限修改的类目
+     *
      * @return
      */
     @RequiresRoles("role:teacher")
     @RequestMapping(value = "/getPermissionCategoryTeacher", method = RequestMethod.POST)
-    public Map getPermissionCategoryTeacher(){
+    public Map getPermissionCategoryTeacher() {
         HashMap<String, Object> ret = new HashMap<>();
-        ret.put("code",200);
-        ret.put("msg","成功");
+        ret.put("code", 200);
+        ret.put("msg", "成功");
         Subject subject = SecurityUtils.getSubject();
         TeacherLoginInfo teacherLoginInfo = (TeacherLoginInfo) subject.getPrincipal();
-        ret.put("category",categoryServiceImpl.getPermissionCategory(teacherLoginInfo.getJobNumber()));
+        ret.put("category", categoryServiceImpl.getPermissionCategory(teacherLoginInfo.getJobNumber()));
         return ret;
     }
 
     /**
      * 获取管理员有权限修改的类目
+     *
      * @return
      */
-    @RequiresRoles(value = {"role:admin","role:bigAdmin"},logical = Logical.OR)
+    @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
     @RequestMapping(value = "/admin/getPermissionCategory", method = RequestMethod.POST)
-    public ReturnModel getPermissionCategoryAdmin(){
+    public ReturnModel getPermissionCategoryAdmin() {
         Subject subject = SecurityUtils.getSubject();
         AdminLogin loginInfo = (AdminLogin) subject.getPrincipal();
         ReturnModel returnModel = new ReturnModel(CodeEnum.SUCCESS, categoryServiceImpl.getPermissionCategoryByAdminId(loginInfo.getAdminId()));

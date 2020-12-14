@@ -36,23 +36,13 @@
             jobNumber = #{param1}
     </select>
 
-    <select id="getTeacherInfo" resultMap="teacherInfoMap" >
+    <select id="getTeacherInfo" resultType="com.hwb.tg.pojo.TeacherInfo" >
         SELECT
-            teacher.teacherId,
-            teacher.jobNumber,
-            teacher.`password`,
-            teacher.`name`,
-            teacher.professional,
-            teacher.longTel,
-            DATE_FORMAT(teacher.employmentDate,'%Y-%c-%d') 'employmentDate',
-            teacher.shortTel,
-            teacher.email,
-            teacher.dingding,
-            teacher.wechat,
-            teacher.sex
+            *
         FROM
             teacher
-	    where   name = #{param1} and jobNumber = #{param2}
+	    where
+	        teacherId = #{param1}
     </select>
 
     <select id="getTeacherIdByJobNumber" resultType="java.lang.Integer">

@@ -7,9 +7,12 @@ import com.hwb.tg.pojo.AdminLogin;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,20 +27,22 @@ import java.util.Map;
 public class AdminController {
     /**
      * 管理员登录
+     *
      * @param info
      * @return
      */
     @PostMapping("/login")
-    public ReturnModel adminLogin(@RequestBody Map info){
-        ReturnModel returnModel ;
+    public ReturnModel adminLogin(HttpServletResponse response,
+                                  @RequestBody Map info) {
+        ReturnModel returnModel;
         String userName = "";
         String password = "";
-        try{
+        try {
             userName = (String) info.get("userName");
             password = (String) info.get("password");
-        }catch (Error error){
+        } catch (Error error) {
             returnModel = new ReturnModel(CodeEnum.API_PARAMETER_ERROR);
-        }catch (Exception error){
+        } catch (Exception error) {
             returnModel = new ReturnModel(CodeEnum.API_PARAMETER_ERROR);
         }
 
@@ -45,16 +50,26 @@ public class AdminController {
         UsernamePasswordTokenModel usernamePasswordToken = new UsernamePasswordTokenModel(userName, password, "admin");
         try {
             subject.login(usernamePasswordToken);
-            Map retMap = new HashMap<String,String>();
-            retMap.put("role",((AdminLogin)subject.getPrincipal()).getRole());
-            returnModel = new ReturnModel(CodeEnum.SUCCESS,retMap);
-        }catch (UnknownAccountException e){
+            Map retMap = new HashMap<String, String>();
+            response.setHeader("Access-Control-Expose-Headers", "token");
+            response.addHeader("token", (String) subject.getSession().getId());
+            retMap.put("role", ((AdminLogin) subject.getPrincipal()).getRole());
+            returnModel = new ReturnModel(CodeEnum.SUCCESS, retMap);
+        } catch (UnknownAccountException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
-        }catch (IncorrectCredentialsException e){
+        } catch (IncorrectCredentialsException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
-        }catch (Exception e){
+        } catch (Exception e) {
             returnModel = new ReturnModel(CodeEnum.FAILD);
         }
         return returnModel;
+    }
+
+    @PostMapping("/getInfo")
+    @RequiresRoles(value = {"role:admin", "role:bigAdmin"},logical = Logical.OR)
+    public ReturnModel getInfo(){
+        AdminLogin adminLogin = (AdminLogin) SecurityUtils.getSubject().getPrincipal();
+        adminLogin.setPassword(null);
+        return new ReturnModel(CodeEnum.SUCCESS, adminLogin);
     }
 }

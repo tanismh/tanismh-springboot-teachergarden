@@ -3,10 +3,12 @@ package com.hwb.tg.Dao;
 import com.hwb.tg.Bean.News;
 import com.hwb.tg.pojo.NewsTitleList;
 import com.hwb.tg.pojo.NewsTitleResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface NewsDao {
     public NewsTitleResult getNewsTitle(Integer categoryId, Integer begin, Integer end);
     public News getNewsDetail(Integer NewsId);
@@ -23,4 +25,6 @@ public interface NewsDao {
     public Integer getNewsLengthByNewsTypeAndTeacherId(Integer newsType, Integer teacherId);
     public Integer searchALlNewsLength(@Param("param1") String key);
     public Integer searchByNewsTypeLength(@Param("param1") String key, Integer newsType);
+    public NewsTitleResult getMyselfNewsAdmin(Integer categoryId, Integer begin, Integer end, Integer adminId);
+    public Integer getNewsLengthByNewsTypeAndAdminId(Integer newsType, Integer teacherId);
 }

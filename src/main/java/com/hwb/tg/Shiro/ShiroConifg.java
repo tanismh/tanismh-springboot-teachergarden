@@ -36,6 +36,8 @@ public class ShiroConifg {
 
         stringStringLinkedHashMap.put("/testLogin","anon");
         stringStringLinkedHashMap.put("/login","anon");
+        stringStringLinkedHashMap.put("/file/**","anon");
+        stringStringLinkedHashMap.put("/img/**","anon");
         stringStringLinkedHashMap.put("/admin/login","anon");
         stringStringLinkedHashMap.put("/unLogin","anon");
         stringStringLinkedHashMap.put("/**","authc");

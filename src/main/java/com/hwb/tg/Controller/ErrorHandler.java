@@ -14,6 +14,7 @@ import java.util.Map;
 public class ErrorHandler {
     /**
      * 未授权异常
+     *
      * @return
      */
     @ExceptionHandler({UnauthorizedException.class, AuthorizationException.class})
@@ -26,6 +27,7 @@ public class ErrorHandler {
 
     /**
      * 未登录异常
+     *
      * @return
      */
     @ExceptionHandler({UnauthenticatedException.class, AuthenticationException.class})
