@@ -259,5 +259,39 @@
             news.adminId = #{param2}
     </select>
 
+    <select id="checkAdminDelPermission" parameterType="java.util.List"  resultType="java.lang.Integer">
+        SELECT DISTINCT
+            news.adminId
+        FROM
+            news
+        WHERE
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator="or">
+            news.newsId = #{item}
+        </foreach>
+    </select>
+
+    <insert id="adminUploadNews">
+        insert into
+            news(adminId, newsTitle, classId, content)
+        values
+            (#{param1},#{param2},#{param3},#{param4})
+    </insert>
+
+    <select id="getAdminNewsLength" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            news
+            INNER JOIN
+            category
+            ON
+                news.classId = category.categoryId
+        WHERE
+            adminId = #{param1} AND
+            news.classId = #{param2}
+        ORDER BY
+            news.publishTime DESC
+    </select>
+
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.hwb.tg.Service.Impl;
 
+import com.github.pagehelper.PageInfo;
 import com.hwb.tg.Bean.News;
 import com.hwb.tg.Dao.AdminDao;
 import com.hwb.tg.Dao.CategoryDao;
@@ -35,6 +36,15 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     AdminDao adminDao;
 
+    /**
+     * 获取新闻列表
+     *
+     * @param newsType
+     * @param pageSize
+     * @param pageNumber
+     * @param flag
+     * @return
+     */
     @Override
     public NewsTitleResult getNewsTitleList(Integer newsType,
                                             Integer pageSize,
@@ -83,6 +93,12 @@ public class NewsServiceImpl implements NewsService {
         return newsTitle;
     }
 
+    /**
+     * 获取新闻详情
+     *
+     * @param NewsId
+     * @return
+     */
     @Override
     public NewsContentResult getNewsDetail(Integer NewsId) {
         News news = newsDao.getNewsDetail(NewsId);
@@ -102,6 +118,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
 
+    /**
+     * 发布新闻（教师）
+     *
+     * @param jobNumber
+     * @param news
+     */
     @Override
     public void teacherUploadNews(String jobNumber, News news) {
         Integer teacherId = teacherDao.getTeacherIdByJobNumber(jobNumber);
@@ -111,6 +133,12 @@ public class NewsServiceImpl implements NewsService {
                 news.getContent());
     }
 
+    /**
+     * 搜索新闻（标题和内容）
+     *
+     * @param searchInfo
+     * @return
+     */
     @Override
     public NewsTitleResult searchNews(Map searchInfo) {
         Integer pageSize = (Integer) searchInfo.get("pageSize");
@@ -129,6 +157,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
 
+    /**
+     * 搜索新闻（类型）
+     *
+     * @param searchInfo
+     * @return
+     */
     @Override
     public NewsTitleResult searchNewsByNewsType(Map searchInfo) {
         Integer pageSize = (Integer) searchInfo.get("pageSize");
@@ -145,6 +179,13 @@ public class NewsServiceImpl implements NewsService {
         return ret;
     }
 
+    /**
+     * 删除自己发布验证
+     *
+     * @param teacherId
+     * @param newsIds
+     * @return
+     */
     @Override
     public Boolean checkDeleteMyNewsTeacher(Integer teacherId,
                                             List<Integer> newsIds) {
@@ -157,11 +198,24 @@ public class NewsServiceImpl implements NewsService {
         return true;
     }
 
+    /**
+     * 删除发布（教师）
+     *
+     * @param newsIds
+     */
     @Override
     public void deleteMyNewsTeacher(List<Integer> newsIds) {
         newsDao.deleteMyNews(newsIds);
     }
 
+    /**
+     * 更新（修改自己发布）
+     *
+     * @param newsId
+     * @param newsTitle
+     * @param newsType
+     * @param content
+     */
     @Override
     public void updateNews(Integer newsId,
                            String newsTitle,
@@ -170,6 +224,13 @@ public class NewsServiceImpl implements NewsService {
         newsDao.updateNews(newsId, newsTitle, content, newsType);
     }
 
+    /**
+     * 验证是否能删除
+     *
+     * @param teacherId 教师Id
+     * @param newsType  新闻类别
+     * @return
+     */
     @Override
     public boolean checkChangeCategory(Integer teacherId,
                                        Integer newsType) {
@@ -183,14 +244,53 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * 验证是否有删除权限（子管理员）
-     * 【废弃】
+     *
      * @param newsIds
-     * @param AdminId
+     * @param adminId
      * @return
      */
     @Override
-    public boolean checkDeletePermissionAdmin(Integer AdminId ,List<Integer> newsIds) {
-
+    public boolean checkDeletePermissionAdmin(Integer adminId, List<Integer> newsIds) {
+        if (newsDao.checkAdminDelPermission(adminId, newsIds) != null) {
+            return true;
+        }
         return false;
+    }
+
+    /**
+     * 管理员发布信息
+     *
+     * @param adminId 管理员Id
+     * @param news    新闻内容
+     */
+    @Override
+    public void adminUploadNews(Integer adminId, News news) {
+        newsDao.adminUploadNews(adminId, news.getNewsTitle(), news.getClassId(), news.getContent());
+    }
+
+    /**
+     * 获取自己发布
+     *
+     * @param adminId    管理员Id
+     * @param categoryId 目录Id
+     * @param pageSize   页面大小
+     * @param pageNumber 页码
+     * @return
+     */
+    @Override
+    public PageInfo<NewsTitleResult> getMyNews(Integer adminId, Integer categoryId, Integer pageSize, Integer pageNumber) {
+        return null;
+    }
+
+    /**
+     * 获取管理员发布内容的长度
+     *
+     * @param adminId    管理员ID
+     * @param categoryId 目录ID
+     * @return
+     */
+    @Override
+    public Integer getAdminNewsLength(Integer adminId, Integer categoryId) {
+        return newsDao.getAdminNewsLength(adminId, categoryId);
     }
 }

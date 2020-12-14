@@ -1,10 +1,13 @@
 package com.hwb.tg.Controller;
 
+import com.hwb.tg.Bean.Admin;
+import com.hwb.tg.Bean.News;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.NewsService;
+import com.hwb.tg.pojo.AdminLogin;
 import com.hwb.tg.pojo.NewsTitleResult;
-import com.sun.org.apache.bcel.internal.classfile.Code;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,7 @@ public class AdminNewsController {
                                  @RequestParam("pageNumber") Integer pageNumber) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         NewsTitleResult newsTitleList = newsServiceImpl.getNewsTitleList(newsType, pageSize, pageNumber, "admin", "", 1);
+        newsTitleList.setNewsListLength(newsServiceImpl.getAdminNewsLength(((AdminLogin)SecurityUtils.getSubject().getPrincipal()).getAdminId(),newsType));
         ret.setData(newsTitleList);
         return ret;
     }
@@ -57,22 +61,34 @@ public class AdminNewsController {
     @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
     public ReturnModel deleteNews(@RequestBody Map deleteInfo) {
         ReturnModel ret = null;
-        List<Integer> newsIds = (List<Integer>) deleteInfo.get("newIds");
-        try{
-            newsServiceImpl.deleteMyNewsTeacher(newsIds);
-            ret = new ReturnModel(CodeEnum.SUCCESS);
-        }catch (Error e){
+        try {
+            List<Integer> newsIds = (List<Integer>) deleteInfo.get("newIds");
+            if (newsServiceImpl.checkDeletePermissionAdmin(((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId(), newsIds)) {
+                newsServiceImpl.deleteMyNewsTeacher(newsIds);
+                ret = new ReturnModel(CodeEnum.SUCCESS);
+            } else {
+                ret = new ReturnModel(CodeEnum.FAILD);
+                ret.setMsg("权限不足");
+            }
+        } catch (Error e) {
             ret = new ReturnModel(CodeEnum.FAILD);
-        }catch (Exception e){
+        } catch (Exception e) {
             ret = new ReturnModel(CodeEnum.FAILD);
         }
         return ret;
     }
 
+    /**
+     * 管理员上传新闻
+     *
+     * @param newsInfo 新闻信息
+     * @return
+     */
     @RequestMapping("/uploadNews")
     @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
-    public ReturnModel uploadNews(){
+    public ReturnModel uploadNews(@RequestBody News newsInfo) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        newsServiceImpl.adminUploadNews(((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId(), newsInfo);
         return ret;
     }
 
