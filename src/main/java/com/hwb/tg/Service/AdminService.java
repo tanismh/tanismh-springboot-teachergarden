@@ -11,8 +11,18 @@ import com.hwb.tg.pojo.AdminLogin;
 public interface AdminService {
     /**
      * 通过用户名获取管理员登录信息
+     *
      * @param userName
      * @return
      */
     public AdminLogin getAdminLoginInfoByUserName(String userName);
+
+    /**
+     * 管理员修改密码
+     *
+     * @param adminId 管理员ID
+     * @param oldPsw  旧密码
+     * @param newPsw  新密码
+     */
+    public void resetPsw(Integer adminId, String oldPsw, String newPsw);
 }

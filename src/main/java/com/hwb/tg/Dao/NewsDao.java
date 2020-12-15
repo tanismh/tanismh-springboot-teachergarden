@@ -47,6 +47,16 @@ public interface NewsDao {
 
     public Integer searchByNewsTypeLength(@Param("param1") String key, Integer newsType);
 
+
+    /**
+     * 获取管理员自己发布的
+     *
+     * @param categoryId 类目ID
+     * @param begin      开始页
+     * @param end        结束页
+     * @param adminId    管理员ID
+     * @return
+     */
     public NewsTitleResult getMyselfNewsAdmin(Integer categoryId, Integer begin, Integer end, Integer adminId);
 
     public Integer getNewsLengthByNewsTypeAndAdminId(Integer newsType, Integer teacherId);

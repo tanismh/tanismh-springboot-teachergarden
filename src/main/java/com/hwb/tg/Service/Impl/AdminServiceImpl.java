@@ -32,4 +32,16 @@ public class AdminServiceImpl implements AdminService {
         }
         return adminLogin;
     }
+
+    /**
+     * 管理员修改密码
+     *
+     * @param adminId 管理员ID
+     * @param oldPsw  旧密码
+     * @param newPsw  新密码
+     */
+    @Override
+    public void resetPsw(Integer adminId, String oldPsw, String newPsw) {
+
+    }
 }

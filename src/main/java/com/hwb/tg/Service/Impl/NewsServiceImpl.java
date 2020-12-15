@@ -15,6 +15,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,9 @@ public class NewsServiceImpl implements NewsService {
                 if (newsTitle == null) {
                     newsTitle = new NewsTitleResult();
                     newsTitle.setNewsListLength(0);
+                    newsTitle.setClassName(categoryDao.getCategoryNameByCategoryId(newsType).getClassName());
+                    newsTitle.setNewsTitleLists(new ArrayList<>());
+                    newsTitle.setCategoryId(newsType);
                 } else {
                     newsTitle.setNewsListLength(newsDao.getNewsLengthByNewsTypeAndAdminId(newsType, teacherDao.getTeacherIdByJobNumber(((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId() + "")));
                 }

@@ -71,4 +71,11 @@ public class AdminController {
         adminLogin.setPassword(null);
         return new ReturnModel(CodeEnum.SUCCESS, adminLogin);
     }
+
+    @PostMapping("/resetPsw")
+    @RequiresRoles(value = {"role:admin", "role:bigAdmin"},logical = Logical.OR)
+    public ReturnModel resetPsw(){
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        return ret;
+    }
 }
