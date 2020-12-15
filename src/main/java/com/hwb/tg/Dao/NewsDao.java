@@ -68,7 +68,7 @@ public interface NewsDao {
      * @param newsIds
      * @return
      */
-    public Integer checkAdminDelPermission(Integer adminId, List<Integer> newsIds);
+    public Integer checkAdminDelPermission(Integer adminId, @Param("newsIds") List<Integer> newsIds);
 
     /**
      * 管理员上传新闻

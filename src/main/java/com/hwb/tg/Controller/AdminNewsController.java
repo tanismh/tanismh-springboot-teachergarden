@@ -68,7 +68,7 @@ public class AdminNewsController {
     public ReturnModel deleteNews(@RequestBody Map deleteInfo) {
         ReturnModel ret = null;
         try {
-            List<Integer> newsIds = (List<Integer>) deleteInfo.get("newIds");
+            List<Integer> newsIds = (List<Integer>) deleteInfo.get("newsIds");
             if (newsServiceImpl.checkDeletePermissionAdmin(((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId(), newsIds)) {
                 newsServiceImpl.deleteMyNewsTeacher(newsIds);
                 ret = new ReturnModel(CodeEnum.SUCCESS);
@@ -77,8 +77,10 @@ public class AdminNewsController {
                 ret.setMsg("权限不足");
             }
         } catch (Error e) {
+            System.out.println(e);
             ret = new ReturnModel(CodeEnum.FAILD);
         } catch (Exception e) {
+            System.out.println(e);
             ret = new ReturnModel(CodeEnum.FAILD);
         }
         return ret;
