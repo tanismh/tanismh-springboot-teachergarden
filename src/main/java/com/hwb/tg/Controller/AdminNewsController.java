@@ -7,6 +7,7 @@ import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.NewsService;
 import com.hwb.tg.pojo.AdminLogin;
 import com.hwb.tg.pojo.NewsTitleResult;
+import com.hwb.tg.pojo.TeacherLoginInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +48,7 @@ public class AdminNewsController {
                                  @RequestParam("pageNumber") Integer pageNumber) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         NewsTitleResult newsTitleList = newsServiceImpl.getNewsTitleList(newsType, pageSize, pageNumber, "admin", "", 1);
-        newsTitleList.setNewsListLength(newsServiceImpl.getAdminNewsLength(((AdminLogin)SecurityUtils.getSubject().getPrincipal()).getAdminId(),newsType));
+        newsTitleList.setNewsListLength(newsServiceImpl.getAdminNewsLength(((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId(), newsType));
         ret.setData(newsTitleList);
         return ret;
     }
@@ -89,6 +91,55 @@ public class AdminNewsController {
     public ReturnModel uploadNews(@RequestBody News newsInfo) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         newsServiceImpl.adminUploadNews(((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId(), newsInfo);
+        return ret;
+    }
+
+    /**
+     * 子管理员修改自己发布
+     *
+     * @param changeInfo: newsType
+     *                    newsId
+     *                    newsTitle
+     *                    content
+     * @return
+     */
+    @RequestMapping("/cmgtChangeNews")
+    @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
+    public ReturnModel cmgtChangeNews(@RequestBody Map changeInfo) {
+        ReturnModel ret = null;
+        Integer newsType = (Integer) changeInfo.get("newsType");
+        Integer newsId = (Integer) changeInfo.get("newsId");
+        String newsTitle = (String) changeInfo.get("newsTitle");
+        String content = (String) changeInfo.get("content");
+
+        //验证是否是自己发布的新闻
+        List<Integer> newsIds = new ArrayList<Integer>();
+        newsIds.add(newsType);
+        Integer adminId = ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId();
+        if (newsServiceImpl.checkDeletePermissionAdmin(adminId, newsIds)) {
+            // 如果是自己发布的新闻允许修改
+            ret = new ReturnModel(CodeEnum.SUCCESS);
+            // 如果后期需要维护子管理不可以删的权限可在此处加上判断语句
+            // 此处默认全部都可以修改
+            newsServiceImpl.updateNews(newsId, newsTitle, newsType, content);
+        } else {
+            // 如果不是自己发布的就不允许修改
+            ret = new ReturnModel(CodeEnum.FAILD);
+            ret.setMsg("拒绝删除非自己发布的信息");
+        }
+        return ret;
+    }
+
+
+    /**
+     * 获取管理员有权限发布的类目
+     * url:/admin/getPermissionCategory
+     *
+     * @return
+     */
+    @RequestMapping("/getPermissionCategory")
+    public ReturnModel getPermissionCategory() {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         return ret;
     }
 
