@@ -4,6 +4,7 @@ import com.hwb.tg.Bean.Admin;
 import com.hwb.tg.Bean.News;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
+import com.hwb.tg.Service.CategoryService;
 import com.hwb.tg.Service.NewsService;
 import com.hwb.tg.pojo.AdminLogin;
 import com.hwb.tg.pojo.NewsTitleResult;
@@ -32,6 +33,9 @@ public class AdminNewsController {
 
     @Autowired
     NewsService newsServiceImpl;
+
+    @Autowired
+    CategoryService categoryServiceImpl;
 
     /**
      * 获取管理员自己发布
@@ -130,7 +134,6 @@ public class AdminNewsController {
         return ret;
     }
 
-
     /**
      * 获取管理员有权限发布的类目
      * url:/admin/getPermissionCategory
@@ -140,7 +143,8 @@ public class AdminNewsController {
     @RequestMapping("/getPermissionCategory")
     public ReturnModel getPermissionCategory() {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        Integer adminId = ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId();
+        ret.setData(categoryServiceImpl.getPermissionCategoryByAdminId(adminId));
         return ret;
     }
-
 }
