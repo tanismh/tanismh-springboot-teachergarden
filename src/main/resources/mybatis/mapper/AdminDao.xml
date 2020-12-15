@@ -30,4 +30,21 @@
             admin.adminId = #{param1}
     </select>
 
+    <select id="getPswByAdminId" resultType="java.lang.String">
+        select
+            password
+        from
+            admin
+        where
+            adminId = #{param1}
+    </select>
+
+    <update id="resetPsw" >
+        update
+            admin
+        set
+            password = #{param2}
+        where
+            adminId = #{param1}
+    </update>
 </mapper>

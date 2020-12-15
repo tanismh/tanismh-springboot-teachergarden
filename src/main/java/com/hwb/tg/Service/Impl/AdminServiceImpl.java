@@ -20,6 +20,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 通过用户名获取管理员登录信息
+     *
      * @param userName
      * @return
      */
@@ -27,7 +28,7 @@ public class AdminServiceImpl implements AdminService {
     public AdminLogin getAdminLoginInfoByUserName(String userName) {
         AdminLogin adminLogin = adminDao.getLoginByUserName(userName);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-        if (adminLogin != null){
+        if (adminLogin != null) {
             adminLogin.setLoginTime(df.format(new Date()));
         }
         return adminLogin;
@@ -42,6 +43,22 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public void resetPsw(Integer adminId, String oldPsw, String newPsw) {
+        adminDao.resetPsw(adminId, newPsw);
+    }
 
+    /**
+     * 验证旧密码是否正确
+     *
+     * @param adminId 管理员ID
+     * @param oldPsw  旧密码
+     * @return
+     */
+    @Override
+    public boolean checkOldPsw(Integer adminId, String oldPsw) {
+        if (oldPsw.equals(adminDao.getPswByAdminId(adminId))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

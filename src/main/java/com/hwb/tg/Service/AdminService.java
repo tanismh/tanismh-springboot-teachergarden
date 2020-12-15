@@ -25,4 +25,13 @@ public interface AdminService {
      * @param newPsw  新密码
      */
     public void resetPsw(Integer adminId, String oldPsw, String newPsw);
+
+    /**
+     * 验证旧密码是否正确
+     *
+     * @param adminId 管理员ID
+     * @param oldPsw  旧密码
+     * @return
+     */
+    public boolean checkOldPsw(Integer adminId, String oldPsw);
 }
