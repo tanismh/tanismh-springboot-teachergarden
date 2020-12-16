@@ -70,6 +70,11 @@ public class AdminController {
         return returnModel;
     }
 
+    /**
+     * 获取管理员信息
+     *
+     * @return
+     */
     @PostMapping("/getCmgInfo")
     @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
     public ReturnModel getInfo() {

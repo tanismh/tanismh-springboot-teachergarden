@@ -13,10 +13,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,10 +140,58 @@ public class AdminNewsController {
      * @return
      */
     @RequestMapping("/getPermissionCategory")
+    @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
     public ReturnModel getPermissionCategory() {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         Integer adminId = ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId();
         ret.setData(categoryServiceImpl.getPermissionCategoryByAdminId(adminId));
+        return ret;
+    }
+
+    /**
+     * 总管理员删除新闻
+     *
+     * @param deleteInfo
+     * @return
+     */
+    @PostMapping("/deleteNews")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel deleteNewsBigAdmin(@RequestBody Map deleteInfo) {
+        ReturnModel ret;
+        try {
+            List<Integer> newsIds = (List<Integer>) deleteInfo.get("newsIds");
+            newsServiceImpl.deleteMyNewsTeacher(newsIds);
+            ret = new ReturnModel(CodeEnum.SUCCESS);
+        } catch (Error e) {
+            System.out.println(e);
+            ret = new ReturnModel(CodeEnum.FAILD);
+        } catch (Exception e) {
+            System.out.println(e);
+            ret = new ReturnModel(CodeEnum.FAILD);
+        }
+        return ret;
+    }
+
+    /**
+     * 总管理修改新闻
+     *
+     * @param changeInfo
+     * @return
+     */
+    @RequestMapping("/BigAdmminChangeNews")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel BigAdmminChangeNews(@RequestBody Map changeInfo) {
+        Integer newsType = (Integer) changeInfo.get("newsType");
+        Integer newsId = (Integer) changeInfo.get("newsId");
+        String newsTitle = (String) changeInfo.get("newsTitle");
+        String content = (String) changeInfo.get("content");
+
+        //验证是否是自己发布的新闻
+        List<Integer> newsIds = new ArrayList<Integer>();
+        newsIds.add(newsType);
+        Integer adminId = ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId();
+        newsServiceImpl.updateNews(newsId, newsTitle, newsType, content);
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         return ret;
     }
 }
