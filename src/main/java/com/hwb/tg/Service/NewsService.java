@@ -1,5 +1,6 @@
 package com.hwb.tg.Service;
 
+import com.github.pagehelper.PageInfo;
 import com.hwb.tg.Bean.News;
 import com.hwb.tg.pojo.NewsContentResult;
 import com.hwb.tg.pojo.NewsTitleResult;
@@ -72,7 +73,7 @@ public interface NewsService {
                                             List<Integer> newsIds);
 
     /**
-     * 删除自己发布
+     * 删除发布
      *
      * @param newsIds
      */
@@ -101,4 +102,42 @@ public interface NewsService {
     public boolean checkChangeCategory(Integer teacherId,
                                        Integer newsType);
 
+    /**
+     * 验证是否有删除权限（子管理员）
+     *
+     * @param newsIds
+     * @param AdminId
+     * @return
+     */
+    public boolean checkDeletePermissionAdmin(Integer AdminId,
+                                              List<Integer> newsIds);
+
+
+    /**
+     * 管理员发布信息
+     *
+     * @param adminId 管理员Id
+     * @param news    新闻内容
+     */
+    public void adminUploadNews(Integer adminId, News news);
+
+    /**
+     * 获取自己发布
+     *
+     * @param adminId    管理员Id
+     * @param categoryId 目录Id
+     * @param pageSize   页面大小
+     * @param pageNumber 页码
+     * @return
+     */
+    public PageInfo<NewsTitleResult> getMyNews(Integer adminId, Integer categoryId, Integer pageSize, Integer pageNumber);
+
+    /**
+     * 获取管理员发布内容的长度
+     *
+     * @param adminId    管理员ID
+     * @param categoryId 目录ID
+     * @return
+     */
+    public Integer getAdminNewsLength(Integer adminId, Integer categoryId);
 }

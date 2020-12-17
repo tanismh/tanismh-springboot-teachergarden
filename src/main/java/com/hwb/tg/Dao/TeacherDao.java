@@ -5,8 +5,10 @@ import com.hwb.tg.pojo.TeacherInfoResult;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import com.hwb.tg.pojo.UpdateTeacherInfoParam;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface TeacherDao {
     public TeacherLoginInfo teacherLoginByJobNumber(String jobNumber);
     public TeacherInfo getTeacherInfo(Integer teacherId);

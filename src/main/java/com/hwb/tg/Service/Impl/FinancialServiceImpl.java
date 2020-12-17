@@ -2,11 +2,14 @@ package com.hwb.tg.Service.Impl;
 
 import com.hwb.tg.Dao.FinancialDao;
 import com.hwb.tg.Service.FinancialService;
+import com.hwb.tg.Utils.ImportExcel;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
 import com.hwb.tg.pojo.FinancialReturn;
+import com.hwb.tg.pojo.FinancialUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +24,12 @@ public class FinancialServiceImpl implements FinancialService {
     @Override
     public List<FinancialReturn> getFinancialByTeacherId(Integer teacherId,
                                                          Integer pageSize,
-                                                         Integer pageNumber){
-        List<FinancialReturn> ret = financialDao.getFinancialByTeacherId(teacherId,  (pageNumber-1)*pageSize, pageSize);
+                                                         Integer pageNumber) {
+        List<FinancialReturn> ret = financialDao.getFinancialByTeacherId(teacherId, (pageNumber - 1) * pageSize, pageSize);
         System.out.println(ret);
-        for (FinancialReturn financialReturn : ret){
+        for (FinancialReturn financialReturn : ret) {
             Double totalNumber = 0.0;
-            for (EveryMonthFinancialDetail e:
+            for (EveryMonthFinancialDetail e :
                     financialReturn.getEveryMonthFinancialDetails()) {
                 totalNumber += e.getMoney();
             }
@@ -36,7 +39,7 @@ public class FinancialServiceImpl implements FinancialService {
     }
 
     @Override
-    public Integer getFinancialLength(Integer teacherId){
+    public Integer getFinancialLength(Integer teacherId) {
         return financialDao.getFinancialLength(teacherId);
     }
 
@@ -45,28 +48,114 @@ public class FinancialServiceImpl implements FinancialService {
                                                  Integer month,
                                                  Integer pageNumber,
                                                  Integer pageSize,
-                                                 Integer teacherId){
+                                                 Integer teacherId) {
         List<FinancialReturn> ret = null;
         if (pageNumber == 0)
             pageNumber = 1;
         if (pageSize == 0)
             pageSize = 100;
-        if ((year !=null && !year.equals("")) && (month!=null && !month.equals(""))){
-            ret = financialDao.searchFinancialByTeacherIdAndYearAndMonth(teacherId,(pageNumber-1)*pageSize,pageSize,year,month);
-        }else if ((year !=null && !year.equals("")) && (month==null || month.equals(""))){
-            ret = financialDao.searchFinancialByTeacherIdAndYear(teacherId,(pageNumber-1)*pageSize,pageSize,year);
-        }else if ((year ==null || year.equals("")) && (month!=null && !month.equals(""))){
-            ret = financialDao.searchFinancialByTeacherIdAndMonth(teacherId,(pageNumber-1)*pageSize,pageSize,month);
-        }else if ((year ==null || year.equals("")) && (month==null || month.equals("")))
-            ret = financialDao.getFinancialByTeacherId(teacherId,(pageNumber-1)*pageNumber,pageNumber);
-        for (FinancialReturn financialReturn : ret){
+        if ((year != null && !year.equals("")) && (month != null && !month.equals(""))) {
+            ret = financialDao.searchFinancialByTeacherIdAndYearAndMonth(teacherId, (pageNumber - 1) * pageSize, pageSize, year, month);
+        } else if ((year != null && !year.equals("")) && (month == null || month.equals(""))) {
+            ret = financialDao.searchFinancialByTeacherIdAndYear(teacherId, (pageNumber - 1) * pageSize, pageSize, year);
+        } else if ((year == null || year.equals("")) && (month != null && !month.equals(""))) {
+            ret = financialDao.searchFinancialByTeacherIdAndMonth(teacherId, (pageNumber - 1) * pageSize, pageSize, month);
+        } else if ((year == null || year.equals("")) && (month == null || month.equals("")))
+            ret = financialDao.getFinancialByTeacherId(teacherId, (pageNumber - 1) * pageNumber, pageNumber);
+        for (FinancialReturn financialReturn : ret) {
             Double totalNumber = 0.0;
-            for (EveryMonthFinancialDetail e:
+            for (EveryMonthFinancialDetail e :
                     financialReturn.getEveryMonthFinancialDetails()) {
                 totalNumber += e.getMoney();
             }
             financialReturn.setTotalNumber(totalNumber);
         }
         return ret;
+    }
+
+    /**
+     * 上传财务信息
+     *
+     * @param path excel文件位置
+     * @return
+     */
+    @Override
+    public List<FinancialUpload> uploadFinancial(String path) {
+        ImportExcel poi = new ImportExcel();
+        List<List<String>> list = poi.read(path, 0, 0);
+        List<FinancialUpload> financials = new ArrayList<>();
+        if (list != null) {
+
+            //获取第一行的标题
+            List<String> category = list.get(1);
+
+            // 遍历行
+            for (int i = 2; i < list.size(); i++) {
+                List<String> cellList = list.get(i);
+                FinancialUpload financial = null;
+
+                /* 获取基本参数 */
+                int year = Integer.parseInt(cellList.get(0));
+                int month = Integer.parseInt(cellList.get(1));
+                String jobNumber = cellList.get(2);
+
+                /* 判断是否已经有这个教师 */
+                int index = contains(financials, jobNumber, year, month);
+                if (index == -1) {
+                    financial = new FinancialUpload();
+                    financial.setJobNumber(jobNumber);
+                    financial.setMonth(month);
+                    financial.setYear(year);
+
+                    ArrayList<EveryMonthFinancialDetail> details = new ArrayList<>();
+                    for (int j = 3; j < cellList.size(); j++) {
+
+                        /* 如果金额为零的话则跳过 */
+                        double money = Double.parseDouble(cellList.get(j));
+                        if (money <= 0) {
+                            continue;
+                        }
+
+                        details.add(new EveryMonthFinancialDetail(category.get(j), money));
+                    }
+                    financial.setDetailList(details);
+                    financials.add(financial);
+                } else {
+                    /* 如果已经有这个教师 则继续添加 */
+                    financial = financials.get(index);
+
+                    List<EveryMonthFinancialDetail> details = financial.getDetailList();
+                    for (int j = 3; j < cellList.size(); j++) {
+                        details.add(new EveryMonthFinancialDetail(category.get(j), Double.parseDouble(cellList.get(j))));
+                    }
+                    financial.setDetailList(details);
+                }
+            }
+        }
+
+        return financials;
+    }
+
+    /**
+     * 配合上传财务信息使用 判断列表中有无该教师
+     *
+     * @param financialUploads 需要识别的列表
+     * @param jobNumber        工号
+     * @param year             年份
+     * @param month            月份
+     * @return
+     */
+    public Integer contains(List<FinancialUpload> financialUploads,
+                            String jobNumber,
+                            Integer year,
+                            Integer month) {
+        Integer index = -1;
+        for (int i = 0; i < financialUploads.size(); i++) {
+            if (financialUploads.get(i).getJobNumber().equals(jobNumber) && financialUploads.get(i).getMonth() == month && financialUploads.get(i).getYear() == year) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 }

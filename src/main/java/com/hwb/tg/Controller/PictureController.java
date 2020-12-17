@@ -1,6 +1,12 @@
 package com.hwb.tg.Controller;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -8,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,7 +50,7 @@ public class PictureController {
             return ret;
         }
         //获取项目根目录加上图片目录 webapp/static/imgages/upload/
-        String savePath = System.getProperty("user.dir")+ "/target/classes/static/img/";
+        String savePath = System.getProperty("user.dir")+ "/picture/";
         File savePathFile = new File(savePath);
         if (!savePathFile.exists()) {
             //若不存在该目录，则创建目录
@@ -66,5 +73,23 @@ public class PictureController {
         ret.put("location","http://47.97.97.208:8082/ssm_learning/picture/"+filename);
         ret.put("name",fname);
         return ret;
+    }
+
+    @RequestMapping(value = "/picture/{path}")
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String path) throws IOException {
+        String filePath = System.getProperty("user.dir") + "/picture/" + path;
+        FileSystemResource file = new FileSystemResource(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getFilename()));
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(file.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(file.getInputStream()));
     }
 }

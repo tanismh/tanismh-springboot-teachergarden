@@ -1,19 +1,24 @@
 package com.hwb.tg.Controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-@RestController
+@Controller
 public class FileController {
+    @ResponseBody
     @RequestMapping("/uploadFile")
     public Map uploadFile(HttpServletRequest request, MultipartFile file) {
         HashMap<String, Object> ret = new HashMap<>();
@@ -28,8 +33,9 @@ public class FileController {
             return ret;
         }
         //获取文件后缀
+        System.out.println(System.getProperty("user.dir"));
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
-        String savePath = System.getProperty("user.dir") + "/target/classes/static/file/";
+        String savePath = System.getProperty("user.dir") + "/file/";
         String fname = file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf("."));
         File savePathFile = new File(savePath);
         if (!savePathFile.exists()) {
@@ -51,5 +57,23 @@ public class FileController {
         ret.put("location", "http://47.97.97.208:8082/ssm_learning/file/" + filename);
         ret.put("name", fname);
         return ret;
+    }
+
+    @RequestMapping(value = "/file/{path}")
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String path) throws IOException {
+        String filePath = System.getProperty("user.dir") + "/file/" + path;
+        FileSystemResource file = new FileSystemResource(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getFilename()));
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(file.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(file.getInputStream()));
     }
 }
