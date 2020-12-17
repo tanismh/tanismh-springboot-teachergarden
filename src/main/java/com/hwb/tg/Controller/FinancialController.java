@@ -2,14 +2,21 @@ package com.hwb.tg.Controller;
 
 
 import com.hwb.tg.Dao.TeacherDao;
+import com.hwb.tg.Model.CodeEnum;
+import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.FinancialService;
+import com.hwb.tg.Service.Impl.FinancialServiceImpl;
 import com.hwb.tg.pojo.FinancialReturn;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -69,6 +76,43 @@ public class FinancialController {
             }
         });
         ret.put("result",financialReturns);
+        return ret;
+    }
+
+
+    @PostMapping("/admin/uploadFinancial")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel uploadFinancial(MultipartFile file){
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        if (file == null) {
+            ret.setCode(CodeEnum.FAILD.getCode());
+            ret.setMsg("选择要上传的文件！");
+        }
+        if (file.getSize() > 1024 * 1024 * 10) {
+            ret.setCode(CodeEnum.FAILD.getCode());
+            ret.setMsg("文件大小不能超过10M！");
+        }
+        //获取文件后缀
+        System.out.println(System.getProperty("user.dir"));
+        String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
+        String savePath = System.getProperty("user.dir") + "/file/";
+        String fname = file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf("."));
+        File savePathFile = new File(savePath);
+        if (!savePathFile.exists()) {
+            //若不存在该目录，则创建目录
+            savePathFile.mkdir();
+        }
+        String strDateFormat = "yyyyMMddHHmmssSS";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(strDateFormat);
+        String filename = simpleDateFormat.format(new Date()) + "." + suffix;
+        try {
+            //将文件保存指定目录
+            file.transferTo(new File(savePath + filename));
+        } catch (Exception e) {
+            ret.setCode(CodeEnum.FAILD.getCode());
+            ret.setMsg("保存文件异常！");
+        }
+        ret.setData(financialServiceImpl.uploadFinancial(savePath + filename));
         return ret;
     }
 }

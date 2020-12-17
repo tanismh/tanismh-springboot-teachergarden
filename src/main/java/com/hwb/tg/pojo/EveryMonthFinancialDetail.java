@@ -12,6 +12,14 @@ public class EveryMonthFinancialDetail {
                 '}';
     }
 
+    public EveryMonthFinancialDetail() {
+    }
+
+    public EveryMonthFinancialDetail(String moneyAbstract, Double money) {
+        this.moneyAbstract = moneyAbstract;
+        this.money = money;
+    }
+
     public String getMoneyAbstract() {
         return moneyAbstract;
     }

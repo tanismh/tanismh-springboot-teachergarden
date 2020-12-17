@@ -154,7 +154,7 @@ public class AdminNewsController {
      * @param deleteInfo
      * @return
      */
-    @PostMapping("/deleteNews")
+    @PostMapping("/BigAdminDeleteNews")
     @RequiresRoles(value = {"role:bigAdmin"})
     public ReturnModel deleteNewsBigAdmin(@RequestBody Map deleteInfo) {
         ReturnModel ret;

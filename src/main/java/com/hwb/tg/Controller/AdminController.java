@@ -89,7 +89,7 @@ public class AdminController {
      * @param resetInfo 包括旧密码、新密码、确认密码
      * @return
      */
-    @PostMapping("/resetPsw")
+    @PostMapping("/admin/resetPsw")
     @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
     public ReturnModel resetPsw(@RequestBody Map resetInfo) {
         ReturnModel ret = null;

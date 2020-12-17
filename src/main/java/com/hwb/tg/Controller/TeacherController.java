@@ -32,6 +32,8 @@ public class TeacherController {
         teacherInfoByTeacherId.setLoginTime(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getLoginTime());
         teacherInfoByTeacherId.setTeacherName(teacherInfoByTeacherId.getName());
         returnMap.put("info", teacherInfoByTeacherId);
+        returnMap.put("code",200);
+        returnMap.put("msg","处理成功");
         return returnMap;
     }
 
