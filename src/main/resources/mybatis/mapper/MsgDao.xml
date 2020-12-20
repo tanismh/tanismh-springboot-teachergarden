@@ -17,6 +17,9 @@
             msg
         WHERE
             msg.teacherId = #{param1}
+        ORDER BY
+            msg.`year` DESC,
+            msg.`month` DESC
         LIMIT #{param2}, #{param3}
     </select>
 
