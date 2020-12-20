@@ -18,4 +18,11 @@ public interface TeacherDao {
     public Integer checkTeacherPsw(String jobNumer, String pwd);
     public void updatePsw(String jobNumber, String psw);
     public void updateTeacherInfo(UpdateTeacherInfoParam updateTeacherInfoParam);
+
+    /**
+     * 通过工号获取教师名字
+     * @param jobNumber
+     * @return
+     */
+    public String getTeacherNameByJobNumber(String jobNumber);
 }

@@ -15,4 +15,15 @@ public interface FinancialDao {
     public List<FinancialReturn> searchFinancialByTeacherIdAndMonth(Integer teacherId, Integer begin, Integer pageSize, Integer month);
     public List<FinancialReturn> searchFinancialByTeacherIdAndYearAndMonth(Integer teacherId, Integer begin, Integer pageSize, Integer year, Integer month);
     public Integer getFinancialLength(Integer teacherId);
+
+    /**
+     * 上传财务信息
+     *
+     * @param teacherId
+     * @param year
+     * @param month
+     * @param abstractFinancial
+     * @param money
+     */
+    public void uploadFinancial(Integer teacherId,Integer year, Integer month,String abstractFinancial,Double money);
 }

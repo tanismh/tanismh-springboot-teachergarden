@@ -9,6 +9,22 @@ import java.util.Objects;
  */
 
 public class FinancialUpload {
+    @Override
+    public String toString() {
+        return "FinancialUpload{" +
+                "teacherId=" + teacherId +
+                ", t_name='" + t_name + '\'' +
+                ", jobNumber='" + jobNumber + '\'' +
+                ", year=" + year +
+                ", month=" + month +
+                ", detailList=" + detailList +
+                '}';
+    }
+
+    /**
+     * 教师ID
+     */
+    public Integer teacherId;
     /**
      * 教师姓名
      */
@@ -29,17 +45,6 @@ public class FinancialUpload {
      * 该月份的明细
      */
     private List<EveryMonthFinancialDetail> detailList;
-
-    @Override
-    public String toString() {
-        return "FinancialUpload{" +
-                "t_name='" + t_name + '\'' +
-                ", jobNumber='" + jobNumber + '\'' +
-                ", year=" + year +
-                ", month=" + month +
-                ", detailList=" + detailList +
-                '}';
-    }
 
     public String getT_name() {
         return t_name;
@@ -75,6 +80,14 @@ public class FinancialUpload {
 
     public List<EveryMonthFinancialDetail> getDetailList() {
         return detailList;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     public void setDetailList(List<EveryMonthFinancialDetail> detailList) {

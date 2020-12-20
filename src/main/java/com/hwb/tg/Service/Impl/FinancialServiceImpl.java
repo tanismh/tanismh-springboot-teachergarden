@@ -1,6 +1,8 @@
 package com.hwb.tg.Service.Impl;
 
 import com.hwb.tg.Dao.FinancialDao;
+import com.hwb.tg.Dao.MsgDao;
+import com.hwb.tg.Dao.TeacherDao;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Utils.ImportExcel;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
@@ -20,6 +22,12 @@ import java.util.List;
 public class FinancialServiceImpl implements FinancialService {
     @Autowired
     FinancialDao financialDao;
+
+    @Autowired
+    TeacherDao teacherDao;
+
+    @Autowired
+    MsgDao msgDao;
 
     @Override
     public List<FinancialReturn> getFinancialByTeacherId(Integer teacherId,
@@ -74,13 +82,13 @@ public class FinancialServiceImpl implements FinancialService {
     }
 
     /**
-     * 上传财务信息
+     * 解析财务信息
      *
      * @param path excel文件位置
      * @return
      */
     @Override
-    public List<FinancialUpload> uploadFinancial(String path) {
+    public List<FinancialUpload> uploadFinancialFile(String path) {
         ImportExcel poi = new ImportExcel();
         List<List<String>> list = poi.read(path, 0, 0);
         List<FinancialUpload> financials = new ArrayList<>();
@@ -119,6 +127,8 @@ public class FinancialServiceImpl implements FinancialService {
                         details.add(new EveryMonthFinancialDetail(category.get(j), money));
                     }
                     financial.setDetailList(details);
+                    financial.setT_name(teacherDao.getTeacherNameByJobNumber(jobNumber));
+                    financial.setTeacherId(teacherDao.getTeacherIdByJobNumber(jobNumber));
                     financials.add(financial);
                 } else {
                     /* 如果已经有这个教师 则继续添加 */
@@ -126,6 +136,12 @@ public class FinancialServiceImpl implements FinancialService {
 
                     List<EveryMonthFinancialDetail> details = financial.getDetailList();
                     for (int j = 3; j < cellList.size(); j++) {
+                        /* 如果金额为零的话则跳过 */
+                        double money = Double.parseDouble(cellList.get(j));
+                        if (money <= 0) {
+                            continue;
+                        }
+
                         details.add(new EveryMonthFinancialDetail(category.get(j), Double.parseDouble(cellList.get(j))));
                     }
                     financial.setDetailList(details);
@@ -134,6 +150,37 @@ public class FinancialServiceImpl implements FinancialService {
         }
 
         return financials;
+    }
+
+    /**
+     * 上传财务信息接口
+     *
+     * @param uploadList 财务信息列表
+     */
+    @Override
+    public boolean uploadFinancial(List<FinancialUpload> uploadList) {
+        /* 检查教师ID是否都存在 */
+        for (FinancialUpload f:
+             uploadList) {
+            if (f.getTeacherId() == null)
+                return false;
+        }
+        try{
+            for (FinancialUpload f:
+                    uploadList) {
+                for (EveryMonthFinancialDetail every:
+                     f.getDetailList()) {
+                    financialDao.uploadFinancial(f.getTeacherId(),f.getYear(),f.getMonth(),every.getMoneyAbstract(),every.getMoney());
+                }
+                String msgContent = "您"+f.getYear()+"年"+f.getMonth()+"月份的财政信息已更新，点击查看";
+                msgDao.updateMsg(msgContent,f.getTeacherId(),f.getYear(),f.getMonth());
+            }
+            return true;
+        }catch (Exception e){
+            return false;
+        }catch (Error error){
+            return false;
+        }
     }
 
     /**
@@ -151,7 +198,7 @@ public class FinancialServiceImpl implements FinancialService {
                             Integer month) {
         Integer index = -1;
         for (int i = 0; i < financialUploads.size(); i++) {
-            if (financialUploads.get(i).getJobNumber().equals(jobNumber) && financialUploads.get(i).getMonth() == month && financialUploads.get(i).getYear() == year) {
+            if (financialUploads.get(i).getJobNumber().equals(jobNumber) && financialUploads.get(i).getMonth() == month && financialUploads.get(i).getYear().intValue() == year.intValue()) {
                 index = i;
                 break;
             }

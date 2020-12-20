@@ -101,4 +101,12 @@
             )
     </select>
 
+    <update id="uploadFinancial">
+        insert into
+            financial (teacherId,year,month ,abstractFinancial,money)
+        values
+            (#{param1},#{param2},#{param3},#{param4},#{param5})
+    </update>
+
+
 </mapper>

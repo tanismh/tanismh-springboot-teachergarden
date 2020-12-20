@@ -48,10 +48,17 @@ public interface FinancialService {
                                                  Integer teacherId);
 
     /**
-     * 上传财务信息
+     * 解析财务信息模板文件
      *
      * @param path excel文件位置
      * @return
      */
-    public List<FinancialUpload> uploadFinancial(String path);
+    public List<FinancialUpload> uploadFinancialFile(String path);
+
+    /**
+     * 上传财务信息接口
+     *
+     * @param uploadList 财务信息列表
+     */
+    public boolean uploadFinancial(List<FinancialUpload> uploadList);
 }
