@@ -7,9 +7,10 @@
     <resultMap type="com.hwb.tg.pojo.FinancialReturn" id="financialSelect">
         <id column="month" property="month"/>
         <id column="year" property="year"></id>
-        <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
-            <result property="moneyAbstract" column="abstractFinancial"/>
-            <result property="money" column="money"></result>
+        <collection property="everyMonthFinancialDetails" javaType="java.util.ArrayList" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+            <id property="moneyAbstract" column="abstractFinancial"/>
+            <id property="money" column="money"></id>
+            <id column="moneyTime"></id>
         </collection>
     </resultMap>
 
@@ -22,13 +23,22 @@
             financial.teacherId = #{param1}
             AND ( financial.`year`, financial.`month` ) IN (
             SELECT DISTINCT
-                `year`,
-                `month`
+                f.`year`,
+                f.`month`
             FROM
-                ( SELECT DISTINCT `year`,`month`  FROM financial where financial.teacherId = #{param1} LIMIT #{param2}, #{param3} ) AS f
-            WHERE
-                financial.teacherId = #{param1}
-            )
+                (
+                SELECT DISTINCT
+                    `year`,
+                    `month`
+                FROM
+                    financial
+                WHERE
+                    financial.teacherId = #{param1}
+                ORDER BY
+                    financial.`year` DESC,
+                    financial.`month` DESC
+                    LIMIT #{param2}, #{param3}
+            ) AS f)
     </select>
 
     <select id="getFinancialLength" resultType="java.lang.Integer">

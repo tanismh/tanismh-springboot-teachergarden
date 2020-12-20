@@ -1,10 +1,12 @@
 package com.hwb.tg;
 
 import com.hwb.tg.Bean.Financial;
+import com.hwb.tg.Dao.FinancialDao;
 import com.hwb.tg.Utils.ImportExcel;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
 import com.hwb.tg.pojo.FinancialUpload;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -13,10 +15,11 @@ import java.util.List;
 @SpringBootTest
 class TgApplicationTests {
 
+    @Autowired
+    FinancialDao financialDao;
     @Test
     void contextLoads() {
-        double d = 1812190403;
-        System.out.println(d);
+        System.out.println(financialDao.getFinancialByTeacherId(1, 0, 10));
     }
 
     @Test
