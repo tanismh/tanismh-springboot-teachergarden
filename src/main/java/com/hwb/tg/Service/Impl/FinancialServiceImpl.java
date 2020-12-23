@@ -6,6 +6,7 @@ import com.hwb.tg.Dao.TeacherDao;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Utils.ImportExcel;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
+import com.hwb.tg.pojo.FinancialInfoAdmin;
 import com.hwb.tg.pojo.FinancialReturn;
 import com.hwb.tg.pojo.FinancialUpload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 何伟斌
@@ -181,6 +183,28 @@ public class FinancialServiceImpl implements FinancialService {
         }catch (Error error){
             return false;
         }
+    }
+
+    /**
+     * 获取最后一个日期
+     *
+     * @return
+     */
+    @Override
+    public Map getLastMonth() {
+        return financialDao.getLastMonth();
+    }
+
+    /**
+     * 查看某个月全部的财务信息
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return
+     */
+    @Override
+    public List<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month) {
+        return null;
     }
 
     /**

@@ -1,9 +1,11 @@
 package com.hwb.tg.Service;
 
+import com.hwb.tg.pojo.FinancialInfoAdmin;
 import com.hwb.tg.pojo.FinancialReturn;
 import com.hwb.tg.pojo.FinancialUpload;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 何伟斌
@@ -61,4 +63,20 @@ public interface FinancialService {
      * @param uploadList 财务信息列表
      */
     public boolean uploadFinancial(List<FinancialUpload> uploadList);
+
+    /**
+     * 获取最后一个日期
+     *
+     * @return
+     */
+    public Map getLastMonth();
+
+    /**
+     * 查看某个月全部的财务信息
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return
+     */
+    public List<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month);
 }

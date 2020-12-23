@@ -10,7 +10,7 @@
         <collection property="everyMonthFinancialDetails" javaType="java.util.ArrayList" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
             <id property="moneyAbstract" column="abstractFinancial"/>
             <id property="money" column="money"></id>
-            <id column="moneyTime"></id>
+            <id column="financialId"></id>
         </collection>
     </resultMap>
 
@@ -118,5 +118,44 @@
             (#{param1},#{param2},#{param3},#{param4},#{param5})
     </update>
 
+    <select id="getLastMonth" resultType="java.util.Map">
+        SELECT DISTINCT
+            `year`,
+            `month`
+        FROM
+            financial
+        ORDER BY
+            financial.`year` DESC,
+            financial.`month` DESC
+        LIMIT 0, 1
+    </select>
+
+
+    <resultMap id="getFinancialInfo" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn">
+            <id property="year" column="year"></id>
+            <id property="month" column="month"></id>
+            <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+                <id property="moneyAbstract" column="abstractFinancial"/>
+                <id property="money" column="money"></id>
+                <id column="financialId"></id>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getOneMonth" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId
+        FROM
+            financial
+        WHERE
+            financial.`year` = #{param1} AND
+            financial.`month` = #{param2}
+    </select>
 
 </mapper>

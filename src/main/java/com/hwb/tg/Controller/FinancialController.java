@@ -145,9 +145,11 @@ public class FinancialController {
         return ret;
     }
 
-
+    @PostMapping("/admin/showAllFinancial")
+    @RequiresRoles(value = {"role:bigAdmin"})
     public ReturnModel showFinancials(){
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+
         return ret;
     }
 }

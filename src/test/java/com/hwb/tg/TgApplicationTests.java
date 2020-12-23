@@ -1,14 +1,23 @@
 package com.hwb.tg;
 
+import com.alibaba.fastjson.JSON;
 import com.hwb.tg.Bean.Financial;
 import com.hwb.tg.Dao.FinancialDao;
+import com.hwb.tg.Model.CodeEnum;
+import com.hwb.tg.Model.ReturnModel;
+import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.Utils.ImportExcel;
+import com.hwb.tg.pojo.AddTeacher;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
 import com.hwb.tg.pojo.FinancialUpload;
+import org.apache.commons.math3.analysis.function.Add;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +100,21 @@ class TgApplicationTests {
             }
         }
         return index;
+    }
+
+    @Autowired
+    AccountService accountServiceImpl;
+
+    @Test
+    public void financial() throws ParseException, SQLIntegrityConstraintViolationException {
+        ArrayList<AddTeacher> addTeachers = new ArrayList<>();
+        addTeachers.add(new AddTeacher("测试用户", "20201223", "123456", "2000.06.27", "教授", "", "", ""));
+        addTeachers.add(new AddTeacher("测试用户", "20201224", "123456", "2000/06/27", "教授", "", "", ""));
+        addTeachers.add(new AddTeacher("测试用户", "20201225", "123456", "", "教授", "", "", ""));
+        addTeachers.add(new AddTeacher("测试用户", "20201223", "123456", "2000.06.27", "教授", "", "", ""));
+        addTeachers.add(new AddTeacher("测试用户", "20201224", "123456", "2000/06/27", "教授", "", "", ""));
+        addTeachers.add(new AddTeacher("测试用户", "20201225", "123456", "", "教授", "", "", ""));
+//        accountServiceImpl.batchAddTeacher(addTeachers);
     }
 
 }
