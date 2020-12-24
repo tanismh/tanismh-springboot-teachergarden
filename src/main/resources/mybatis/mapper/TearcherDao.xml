@@ -104,4 +104,13 @@
         where
             jobNumber = #{jobNumber}
     </update>
+
+    <select id="getTeacherNameByJobNumber" resultType="java.lang.String">
+        select
+            name
+        from
+            teacher
+        where
+            jobNumber = #{param1}
+    </select>
 </mapper>

@@ -40,8 +40,9 @@ public class ShiroConifg {
         stringStringLinkedHashMap.put("/img/**","anon");
         stringStringLinkedHashMap.put("/admin/login","anon");
         stringStringLinkedHashMap.put("/unLogin","anon");
-        stringStringLinkedHashMap.put("/**","authc");
         stringStringLinkedHashMap.put("/druid/*","anon");
+        stringStringLinkedHashMap.put("/swagger**/**", "anon");
+        stringStringLinkedHashMap.put("/**","authc");
         bean.setFilterChainDefinitionMap(stringStringLinkedHashMap);
         bean.setLoginUrl("/unLogin");
         bean.setUnauthorizedUrl("/unauthorized");

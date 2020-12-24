@@ -17,7 +17,17 @@
             msg
         WHERE
             msg.teacherId = #{param1}
+        ORDER BY
+            msg.`year` DESC,
+            msg.`month` DESC
         LIMIT #{param2}, #{param3}
     </select>
+
+    <insert id="updateMsg">
+        insert into
+            msg (msgContent,teacherId,year,month)
+        values
+            (#{param1},#{param2},#{param3},#{param4})
+    </insert>
 
 </mapper>

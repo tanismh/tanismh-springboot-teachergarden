@@ -7,6 +7,7 @@ import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Service.Impl.FinancialServiceImpl;
 import com.hwb.tg.pojo.FinancialReturn;
+import com.hwb.tg.pojo.FinancialUpload;
 import com.hwb.tg.pojo.TeacherLoginInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -80,7 +81,7 @@ public class FinancialController {
     }
 
 
-    @PostMapping("/admin/uploadFinancial")
+    @PostMapping("/admin/uploadFinancialFile")
     @RequiresRoles(value = {"role:bigAdmin"})
     public ReturnModel uploadFinancial(MultipartFile file){
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
@@ -112,7 +113,43 @@ public class FinancialController {
             ret.setCode(CodeEnum.FAILD.getCode());
             ret.setMsg("保存文件异常！");
         }
-        ret.setData(financialServiceImpl.uploadFinancial(savePath + filename));
+        try{
+            ret.setData(financialServiceImpl.uploadFinancialFile(savePath + filename));
+        }catch (Exception e){
+            ret.setMsg("发生异常，请检查模板文件");
+            ret.setCode(CodeEnum.FAILD.getCode());
+        }catch (Error e){
+            ret.setMsg("发生异常，请检查模板文件");
+            ret.setCode(CodeEnum.FAILD.getCode());
+        }
+        return ret;
+    }
+
+
+    /**
+     * 上传财务信息接口
+     *
+     * @param info 含有上传信息的信息
+     * @return
+     */
+    @PostMapping("/admin/uploadFinancial")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel uploadFinancial(@RequestBody Map<String,List<FinancialUpload>> info){
+        ReturnModel ret = null;
+        List<FinancialUpload> uploadList = info.get("financials");
+        if (financialServiceImpl.uploadFinancial(uploadList)){
+            ret = new ReturnModel(CodeEnum.SUCCESS);
+        }else{
+            ret = new ReturnModel(CodeEnum.FAILD);
+        }
+        return ret;
+    }
+
+    @PostMapping("/admin/showAllFinancial")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel showFinancials(){
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+
         return ret;
     }
 }

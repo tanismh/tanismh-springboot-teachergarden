@@ -7,9 +7,10 @@
     <resultMap type="com.hwb.tg.pojo.FinancialReturn" id="financialSelect">
         <id column="month" property="month"/>
         <id column="year" property="year"></id>
-        <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
-            <result property="moneyAbstract" column="abstractFinancial"/>
-            <result property="money" column="money"></result>
+        <collection property="everyMonthFinancialDetails" javaType="java.util.ArrayList" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+            <id property="moneyAbstract" column="abstractFinancial"/>
+            <id property="money" column="money"></id>
+            <id column="financialId"></id>
         </collection>
     </resultMap>
 
@@ -22,13 +23,22 @@
             financial.teacherId = #{param1}
             AND ( financial.`year`, financial.`month` ) IN (
             SELECT DISTINCT
-                `year`,
-                `month`
+                f.`year`,
+                f.`month`
             FROM
-                ( SELECT DISTINCT `year`,`month`  FROM financial where financial.teacherId = #{param1} LIMIT #{param2}, #{param3} ) AS f
-            WHERE
-                financial.teacherId = #{param1}
-            )
+                (
+                SELECT DISTINCT
+                    `year`,
+                    `month`
+                FROM
+                    financial
+                WHERE
+                    financial.teacherId = #{param1}
+                ORDER BY
+                    financial.`year` DESC,
+                    financial.`month` DESC
+                    LIMIT #{param2}, #{param3}
+            ) AS f)
     </select>
 
     <select id="getFinancialLength" resultType="java.lang.Integer">
@@ -99,6 +109,53 @@
                 and
                 financial.year = #{param4}
             )
+    </select>
+
+    <update id="uploadFinancial">
+        insert into
+            financial (teacherId,year,month ,abstractFinancial,money)
+        values
+            (#{param1},#{param2},#{param3},#{param4},#{param5})
+    </update>
+
+    <select id="getLastMonth" resultType="java.util.Map">
+        SELECT DISTINCT
+            `year`,
+            `month`
+        FROM
+            financial
+        ORDER BY
+            financial.`year` DESC,
+            financial.`month` DESC
+        LIMIT 0, 1
+    </select>
+
+
+    <resultMap id="getFinancialInfo" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn">
+            <id property="year" column="year"></id>
+            <id property="month" column="month"></id>
+            <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+                <id property="moneyAbstract" column="abstractFinancial"/>
+                <id property="money" column="money"></id>
+                <id column="financialId"></id>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getOneMonth" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId
+        FROM
+            financial
+        WHERE
+            financial.`year` = #{param1} AND
+            financial.`month` = #{param2}
     </select>
 
 </mapper>
