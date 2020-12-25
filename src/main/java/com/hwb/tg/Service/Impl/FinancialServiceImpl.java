@@ -11,6 +11,7 @@ import com.hwb.tg.pojo.FinancialReturn;
 import com.hwb.tg.pojo.FinancialUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,27 +161,28 @@ public class FinancialServiceImpl implements FinancialService {
      * @param uploadList 财务信息列表
      */
     @Override
+    @Transactional
     public boolean uploadFinancial(List<FinancialUpload> uploadList) {
         /* 检查教师ID是否都存在 */
-        for (FinancialUpload f:
-             uploadList) {
+        for (FinancialUpload f :
+                uploadList) {
             if (f.getTeacherId() == null)
                 return false;
         }
-        try{
-            for (FinancialUpload f:
+        try {
+            for (FinancialUpload f :
                     uploadList) {
-                for (EveryMonthFinancialDetail every:
-                     f.getDetailList()) {
-                    financialDao.uploadFinancial(f.getTeacherId(),f.getYear(),f.getMonth(),every.getMoneyAbstract(),every.getMoney());
+                for (EveryMonthFinancialDetail every :
+                        f.getDetailList()) {
+                    financialDao.uploadFinancial(f.getTeacherId(), f.getYear(), f.getMonth(), every.getMoneyAbstract(), every.getMoney());
                 }
-                String msgContent = "您"+f.getYear()+"年"+f.getMonth()+"月份的财政信息已更新，点击查看";
-                msgDao.updateMsg(msgContent,f.getTeacherId(),f.getYear(),f.getMonth());
+                String msgContent = "您" + f.getYear() + "年" + f.getMonth() + "月份的财政信息已更新，点击查看";
+                msgDao.updateMsg(msgContent, f.getTeacherId(), f.getYear(), f.getMonth());
             }
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
-        }catch (Error error){
+        } catch (Error error) {
             return false;
         }
     }
@@ -204,7 +206,18 @@ public class FinancialServiceImpl implements FinancialService {
      */
     @Override
     public List<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month) {
-        return null;
+        List<FinancialInfoAdmin> oneMonth = financialDao.getOneMonth(year, month);
+        oneMonth.forEach((one) -> {
+            one.getFinancialLists().forEach(financialReturn -> {
+                Double sum = 0.0;
+                for (EveryMonthFinancialDetail every :
+                        financialReturn.getEveryMonthFinancialDetails()) {
+                    sum += every.getMoney();
+                }
+                financialReturn.setTotalNumber(sum);
+            });
+        });
+        return oneMonth;
     }
 
     /**
