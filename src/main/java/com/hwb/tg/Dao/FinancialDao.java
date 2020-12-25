@@ -38,7 +38,7 @@ public interface FinancialDao {
      *
      * @return
      */
-    public Map getLastMonth();
+    public Map<String,Integer> getLastMonth();
 
     /**
      * 获取某个月的财务信息

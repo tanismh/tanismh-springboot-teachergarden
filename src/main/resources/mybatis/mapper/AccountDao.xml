@@ -10,4 +10,22 @@
         values
             (#{jobNumber},#{password},#{teacherName},#{position},STR_TO_DATE(#{EmpTime},'%Y/%m/%d'),#{longTel},#{shortTel},#{email},1)
     </insert>
+
+    <insert id="addAdmin" parameterType="com.hwb.tg.pojo.AddAdminAccount">
+        INSERT INTO
+            `admin` (`userName`, `password`, `department`, `permissionId`)
+        VALUES
+            (#{userName}, #{password}, #{department}, 2)
+
+    </insert>
+
+    <select id="checkUserName" resultType="java.lang.String">
+        SELECT
+            admin.userName
+        FROM
+            admin
+        where
+            userName = #{param1}
+        limit 0,1
+    </select>
 </mapper>

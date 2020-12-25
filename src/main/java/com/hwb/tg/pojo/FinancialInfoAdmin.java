@@ -13,6 +13,10 @@ public class FinancialInfoAdmin {
      */
     private Integer teacherId;
     /**
+     * 教职工姓名
+     */
+    private String teacherName;
+    /**
      * 财务信息
      */
     private List<FinancialReturn> financialLists;
@@ -21,8 +25,17 @@ public class FinancialInfoAdmin {
     public String toString() {
         return "FinancialInfoAdmin{" +
                 "teacherId=" + teacherId +
+                ", teacherName='" + teacherName + '\'' +
                 ", financialLists=" + financialLists +
                 '}';
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
     public Integer getTeacherId() {

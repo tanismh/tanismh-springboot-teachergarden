@@ -149,7 +149,16 @@ public class FinancialController {
     @RequiresRoles(value = {"role:bigAdmin"})
     public ReturnModel showFinancials(){
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        Map<String,Integer> lastMonth = financialServiceImpl.getLastMonth();
+        ret.setData(financialServiceImpl.showAllFinancial(lastMonth.get("year"),lastMonth.get("month")));
+        return ret;
+    }
 
+    @PostMapping("/admin/deleteFinancial")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel deleteFinancial(@RequestBody Map deleteInfo){
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        
         return ret;
     }
 }

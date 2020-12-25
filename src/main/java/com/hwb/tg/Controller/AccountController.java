@@ -3,6 +3,7 @@ package com.hwb.tg.Controller;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
+import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,19 +76,53 @@ public class AccountController {
 
     @PostMapping("/admin/batchUploadAddTeacher")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel batchUploadAddTeacher(@RequestBody List<AddTeacher> teachers){
-        try{
+    public ReturnModel batchUploadAddTeacher(@RequestBody List<AddTeacher> teachers) {
+        try {
             accountServiceImpl.batchAddTeacher(teachers);
             ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
             return ret;
-        }catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             ReturnModel ret = new ReturnModel(CodeEnum.FAILD);
             ret.setMsg("添加失败，工号重复，请修改工号");
             return ret;
-        }catch (SQLIntegrityConstraintViolationException e){
+        } catch (SQLIntegrityConstraintViolationException e) {
             ReturnModel ret = new ReturnModel(CodeEnum.FAILD);
             ret.setMsg("添加失败，工号重复，请修改工号");
             return ret;
         }
     }
+
+
+    /**
+     * 添加管理员账号
+     *
+     * @param adminAccount
+     * @return
+     */
+    @PostMapping("/admin/addAdmin")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel addAdmin(@RequestBody AddAdminAccount adminAccount) {
+        ReturnModel ret = null;
+        if (adminAccount.getPassword() == null || adminAccount.getConfirmPassword() == null) {
+            ret = new ReturnModel(CodeEnum.FAILD);
+            ret.setMsg("密码或确认密码不能为空");
+        } else if (!adminAccount.getConfirmPassword().equals(adminAccount.getPassword())) {
+            ret = new ReturnModel(CodeEnum.FAILD);
+            ret.setMsg("两次密码不一致");
+        } else if (adminAccount.getDepartment() == null) {
+            ret = new ReturnModel(CodeEnum.FAILD);
+            ret.setMsg("部门信息不能为空");
+        } else {
+            if (accountServiceImpl.addAdmin(adminAccount)){
+                ret = new ReturnModel(CodeEnum.SUCCESS);
+            }else {
+                ret = new ReturnModel(CodeEnum.FAILD);
+                ret.setMsg("添加失败，用户名已存在");
+            }
+
+        }
+        return ret;
+    }
+
+
 }

@@ -10,7 +10,7 @@
         <collection property="everyMonthFinancialDetails" javaType="java.util.ArrayList" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
             <id property="moneyAbstract" column="abstractFinancial"/>
             <id property="money" column="money"></id>
-            <id column="financialId"></id>
+            <id column="financialId" property="financialId"></id>
         </collection>
     </resultMap>
 
@@ -133,13 +133,14 @@
 
     <resultMap id="getFinancialInfo" type="com.hwb.tg.pojo.FinancialInfoAdmin">
         <id property="teacherId" column="teacherId"></id>
+        <result column="name" property="teacherName"></result>
         <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn">
             <id property="year" column="year"></id>
             <id property="month" column="month"></id>
             <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
                 <id property="moneyAbstract" column="abstractFinancial"/>
                 <id property="money" column="money"></id>
-                <id column="financialId"></id>
+                <id column="financialId" property="financialId"></id>
             </collection>
         </collection>
     </resultMap>
@@ -150,9 +151,14 @@
             financial.`month`,
             financial.abstractFinancial,
             financial.money,
-            financial.financialId
+            financial.financialId,
+            teacher.`name`
         FROM
             financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
         WHERE
             financial.`year` = #{param1} AND
             financial.`month` = #{param2}

@@ -2,11 +2,14 @@ package com.hwb.tg;
 
 import com.alibaba.fastjson.JSON;
 import com.hwb.tg.Bean.Financial;
+import com.hwb.tg.Dao.AccountDao;
 import com.hwb.tg.Dao.FinancialDao;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
+import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Utils.ImportExcel;
+import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
 import com.hwb.tg.pojo.FinancialUpload;
@@ -20,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class TgApplicationTests {
@@ -104,17 +108,24 @@ class TgApplicationTests {
 
     @Autowired
     AccountService accountServiceImpl;
+    @Autowired
+    FinancialService financialServiceImpl;
+    @Autowired
+    AccountDao accountDao;
 
     @Test
     public void financial() throws ParseException, SQLIntegrityConstraintViolationException {
-        ArrayList<AddTeacher> addTeachers = new ArrayList<>();
-        addTeachers.add(new AddTeacher("测试用户", "20201223", "123456", "2000.06.27", "教授", "", "", ""));
-        addTeachers.add(new AddTeacher("测试用户", "20201224", "123456", "2000/06/27", "教授", "", "", ""));
-        addTeachers.add(new AddTeacher("测试用户", "20201225", "123456", "", "教授", "", "", ""));
-        addTeachers.add(new AddTeacher("测试用户", "20201223", "123456", "2000.06.27", "教授", "", "", ""));
-        addTeachers.add(new AddTeacher("测试用户", "20201224", "123456", "2000/06/27", "教授", "", "", ""));
-        addTeachers.add(new AddTeacher("测试用户", "20201225", "123456", "", "教授", "", "", ""));
-//        accountServiceImpl.batchAddTeacher(addTeachers);
+        Map<String,Integer> lastMonth = financialDao.getLastMonth();
+        System.out.println(JSON.toJSONString(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"))));
+    }
+
+    @Test
+    public void addAdmin(){
+        AddAdminAccount addAdminAccount = new AddAdminAccount();
+        addAdminAccount.setUserName("子管理测试");
+        addAdminAccount.setPassword("test");
+        addAdminAccount.setDepartment("test");
+        accountDao.addAdmin(addAdminAccount);
     }
 
 }
