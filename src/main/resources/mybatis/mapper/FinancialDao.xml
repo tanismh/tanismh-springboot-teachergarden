@@ -10,7 +10,7 @@
         <collection property="everyMonthFinancialDetails" javaType="java.util.ArrayList" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
             <id property="moneyAbstract" column="abstractFinancial"/>
             <id property="money" column="money"></id>
-            <id column="financialId"></id>
+            <id column="financialId" property="financialId"></id>
         </collection>
     </resultMap>
 
@@ -140,7 +140,7 @@
             <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
                 <id property="moneyAbstract" column="abstractFinancial"/>
                 <id property="money" column="money"></id>
-                <id column="financialId"></id>
+                <id column="financialId" property="financialId"></id>
             </collection>
         </collection>
     </resultMap>

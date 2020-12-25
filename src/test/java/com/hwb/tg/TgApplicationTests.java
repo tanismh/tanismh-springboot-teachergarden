@@ -2,12 +2,14 @@ package com.hwb.tg;
 
 import com.alibaba.fastjson.JSON;
 import com.hwb.tg.Bean.Financial;
+import com.hwb.tg.Dao.AccountDao;
 import com.hwb.tg.Dao.FinancialDao;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Utils.ImportExcel;
+import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
 import com.hwb.tg.pojo.FinancialUpload;
@@ -108,11 +110,22 @@ class TgApplicationTests {
     AccountService accountServiceImpl;
     @Autowired
     FinancialService financialServiceImpl;
+    @Autowired
+    AccountDao accountDao;
 
     @Test
     public void financial() throws ParseException, SQLIntegrityConstraintViolationException {
         Map<String,Integer> lastMonth = financialDao.getLastMonth();
         System.out.println(JSON.toJSONString(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"))));
+    }
+
+    @Test
+    public void addAdmin(){
+        AddAdminAccount addAdminAccount = new AddAdminAccount();
+        addAdminAccount.setUserName("子管理测试");
+        addAdminAccount.setPassword("test");
+        addAdminAccount.setDepartment("test");
+        accountDao.addAdmin(addAdminAccount);
     }
 
 }

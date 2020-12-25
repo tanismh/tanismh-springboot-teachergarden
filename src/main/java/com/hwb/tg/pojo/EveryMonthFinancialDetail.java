@@ -3,13 +3,23 @@ package com.hwb.tg.pojo;
 public class EveryMonthFinancialDetail {
     private String moneyAbstract;
     private Double money;
+    private Integer financialId;
 
     @Override
     public String toString() {
-        return "FinancialDetail{" +
+        return "EveryMonthFinancialDetail{" +
                 "moneyAbstract='" + moneyAbstract + '\'' +
                 ", money=" + money +
+                ", financialId=" + financialId +
                 '}';
+    }
+
+    public Integer getFinancialId() {
+        return financialId;
+    }
+
+    public void setFinancialId(Integer financialId) {
+        this.financialId = financialId;
     }
 
     public EveryMonthFinancialDetail() {

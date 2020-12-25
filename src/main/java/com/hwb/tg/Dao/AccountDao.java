@@ -1,5 +1,6 @@
 package com.hwb.tg.Dao;
 
+import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,19 @@ public interface AccountDao {
      * @param teacher
      */
     public void batchAddTeacher(AddTeacher teacher);
+
+    /**
+     * 添加子管理员
+     *
+     * @param adminAccount
+     */
+    public void addAdmin(AddAdminAccount adminAccount);
+
+    /**
+     * 检查用户名是否存在
+     *
+     * @param userName
+     * @return
+     */
+    public String checkUserName(String userName);
 }

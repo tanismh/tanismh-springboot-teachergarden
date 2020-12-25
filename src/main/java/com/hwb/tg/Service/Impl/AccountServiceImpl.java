@@ -3,6 +3,7 @@ package com.hwb.tg.Service.Impl;
 import com.hwb.tg.Dao.AccountDao;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.Utils.ImportExcel;
+import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
 import com.hwb.tg.pojo.EveryMonthFinancialDetail;
 import com.hwb.tg.pojo.FinancialUpload;
@@ -95,4 +96,30 @@ public class AccountServiceImpl implements AccountService {
 
         }
     }
+
+    /**
+     * 添加管理员账号
+     *
+     * @param adminAccount
+     */
+    @Override
+    public Boolean addAdmin(AddAdminAccount adminAccount) {
+        if (checkUserName(adminAccount.getUserName())){
+            accountDao.addAdmin(adminAccount);
+            return true;
+        }else
+            return false;
+    }
+
+    /**
+     * 检查用户名是否存在
+     *
+     * @param userName
+     * @return
+     */
+    @Override
+    public Boolean checkUserName(String userName) {
+        return accountDao.checkUserName(userName)==null;
+    }
+
 }

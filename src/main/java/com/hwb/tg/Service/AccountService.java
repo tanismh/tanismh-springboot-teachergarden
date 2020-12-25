@@ -1,5 +1,6 @@
 package com.hwb.tg.Service;
 
+import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
 import org.apache.commons.math3.analysis.function.Add;
 
@@ -26,4 +27,19 @@ public interface AccountService {
      * @param teachers
      */
     public void batchAddTeacher(List<AddTeacher> teachers) throws SQLIntegrityConstraintViolationException;
+
+    /**
+     * 添加管理员账号
+     *
+     * @param adminAccount
+     */
+    public Boolean addAdmin(AddAdminAccount adminAccount);
+
+    /**
+     * 检查用户名是否存在
+     *
+     * @param userName
+     * @return
+     */
+    public Boolean checkUserName(String userName);
 }
