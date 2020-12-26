@@ -31,6 +31,12 @@ public class TeacherLoginInfo {
      */
     private String role;
 
+    /**
+     * 冻结状态
+     * @return
+     */
+    private Integer freeze;
+
     @Override
     public String toString() {
         return "TeacherLoginInfo{" +
@@ -40,7 +46,16 @@ public class TeacherLoginInfo {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", role='" + role + '\'' +
+                ", freeze=" + freeze +
                 '}';
+    }
+
+    public Integer getFreeze() {
+        return freeze;
+    }
+
+    public void setFreeze(Integer freeze) {
+        this.freeze = freeze;
     }
 
     public Integer getTeacherId() {

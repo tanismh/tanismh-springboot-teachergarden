@@ -25,7 +25,8 @@
             teacher.teacherId,
             teacher.jobNumber,
             teacher.`password`,
-            teacher.`name`
+            teacher.`name`,
+            teacher.`freeze`
         FROM
             teacher
             INNER JOIN

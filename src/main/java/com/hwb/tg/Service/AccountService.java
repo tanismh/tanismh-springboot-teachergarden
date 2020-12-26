@@ -75,4 +75,11 @@ public interface AccountService {
      * @return
      */
     public TeacherInfoAdmin getATeacherInfo(Integer teacherId);
+
+    /**
+     * 更新教师信息
+     *
+     * @param infoAdmin
+     */
+    public void updateTeacher(TeacherInfoAdmin infoAdmin);
 }

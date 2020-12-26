@@ -1,6 +1,7 @@
 package com.hwb.tg.Dao;
 
 
+import com.hwb.tg.pojo.EditFinancial;
 import com.hwb.tg.pojo.FinancialInfoAdmin;
 import com.hwb.tg.pojo.FinancialReturn;
 import org.apache.ibatis.annotations.Mapper;
@@ -102,4 +103,9 @@ public interface FinancialDao {
      * @return
      */
     public List<FinancialInfoAdmin> getTeacherByIDANdYear(Integer year, Integer teacherId);
+
+    /**
+     * 编辑财务信息
+     */
+    public void updateFinancial(EditFinancial editFinancial);
 }

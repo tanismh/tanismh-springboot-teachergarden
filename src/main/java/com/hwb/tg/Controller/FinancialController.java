@@ -6,10 +6,7 @@ import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Service.Impl.FinancialServiceImpl;
-import com.hwb.tg.pojo.AdminLogin;
-import com.hwb.tg.pojo.FinancialReturn;
-import com.hwb.tg.pojo.FinancialUpload;
-import com.hwb.tg.pojo.TeacherLoginInfo;
+import com.hwb.tg.pojo.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,15 +177,22 @@ public class FinancialController {
                                         @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                         @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
-        if (pageNumber == null || pageNumber == 0){
+        if (pageNumber == null || pageNumber == 0) {
             pageNumber = 1;
         }
-        if (pageSize == null || pageSize == 0){
+        if (pageSize == null || pageSize == 0) {
             pageSize = 1000;
         }
         ret.setData(financialServiceImpl.searchTeacherFinancial(teacherId, year, month, pageSize, pageNumber));
         return ret;
     }
 
+    @PostMapping("/admin/editFinancial")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel editFinancial(@RequestBody List<EditFinancial> financials) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        financialServiceImpl.updateFinancial(financials);
+        return ret;
+    }
 
 }

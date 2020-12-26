@@ -57,7 +57,11 @@ public interface AccountDao {
 
     /**
      * 获取单个教师信息
-     *
      */
     public TeacherInfoAdmin getATeacherInfo(Integer teacherId);
+
+    /**
+     * 更新教师信息
+     */
+    public void updateTeacher(TeacherInfoAdmin infoAdmin);
 }

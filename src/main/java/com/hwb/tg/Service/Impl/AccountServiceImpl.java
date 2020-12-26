@@ -167,4 +167,17 @@ public class AccountServiceImpl implements AccountService {
         return accountDao.getATeacherInfo(teacherId);
     }
 
+    /**
+     * 更新教师信息
+     *
+     * @param infoAdmin
+     */
+    @Override
+    public void updateTeacher(TeacherInfoAdmin infoAdmin) {
+        infoAdmin.setEmploymentDate(
+                infoAdmin.getEmploymentDate().split(" ")[0].replace("/","-")
+        );
+        accountDao.updateTeacher(infoAdmin);
+    }
+
 }

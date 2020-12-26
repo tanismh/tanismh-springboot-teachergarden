@@ -51,6 +51,9 @@ public class LoginController {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         } catch (IncorrectCredentialsException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
+        } catch (RuntimeException e){
+            returnModel = new ReturnModel(CodeEnum.FAILD);
+            returnModel.setMsg("账号冻结，登录失败");
         } catch (Exception e) {
             System.out.println("_________________________________________________");
             System.out.println(e);

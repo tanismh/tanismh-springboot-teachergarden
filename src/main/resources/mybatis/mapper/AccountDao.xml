@@ -53,4 +53,20 @@
         where
             teacherId = #{param1}
     </select>
+
+    <update id="updateTeacher" parameterType="com.hwb.tg.pojo.TeacherInfoAdmin">
+        update
+            teacher
+        set
+            name = #{name},
+            jobNumber=#{jobNumber},
+            employmentDate= STR_TO_DATE(#{employmentDate},'%Y-%m-%d'),
+            professional= #{professional},
+            longTel= #{longTel},
+            shortTel= #{shortTel},
+            email= #{email},
+            freeze= #{freeze}
+        where
+            teacherId = #{teacherId}
+    </update>
 </mapper>

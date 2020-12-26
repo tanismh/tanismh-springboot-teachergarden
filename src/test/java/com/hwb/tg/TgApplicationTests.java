@@ -9,10 +9,7 @@ import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Utils.ImportExcel;
-import com.hwb.tg.pojo.AddAdminAccount;
-import com.hwb.tg.pojo.AddTeacher;
-import com.hwb.tg.pojo.EveryMonthFinancialDetail;
-import com.hwb.tg.pojo.FinancialUpload;
+import com.hwb.tg.pojo.*;
 import org.apache.commons.math3.analysis.function.Add;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,10 +135,9 @@ class TgApplicationTests {
 
     @Test
     public void getTeacher(){
-//        System.out.println(
-//                JSON.toJSONString(accountServiceImpl.getTeacherInfo(10,1))
-//        );
-        accountDao.unFreezeTeacher(22);
+        TeacherInfoAdmin aTeacherInfo = accountServiceImpl.getATeacherInfo(26);
+        aTeacherInfo.setName("修改测试");
+        accountServiceImpl.updateTeacher(aTeacherInfo);
     }
 
 }

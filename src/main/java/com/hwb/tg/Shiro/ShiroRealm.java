@@ -45,12 +45,16 @@ public class ShiroRealm extends AuthorizingRealm {
             AdminLogin loginInfo = adminServiceImpl.getAdminLoginInfoByUserName(userName);
             if (loginInfo == null) {
                 throw new UnknownAccountException();
+            }else if (loginInfo.getFreeze()==1){
+                throw new RuntimeException();
             }
             return new SimpleAuthenticationInfo(loginInfo, loginInfo.getPassword(), "ShiroRealm");
         } else {
             TeacherLoginInfo teacherInfo = teacherServiceImpl.getTeacherInfoByJobNumber(userName);
             if (teacherInfo == null) {
                 throw new UnknownAccountException();
+            }else if (teacherInfo.getFreeze()==1){
+                throw new RuntimeException();
             }
             return new SimpleAuthenticationInfo(teacherInfo, "123456a", "ShiroRealm");
         }

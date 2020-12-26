@@ -112,12 +112,12 @@
             )
     </select>
 
-    <update id="uploadFinancial">
+    <insert id="uploadFinancial">
         insert into
             financial (teacherId,year,month ,abstractFinancial,money)
         values
             (#{param1},#{param2},#{param3},#{param4},#{param5})
-    </update>
+    </insert>
 
     <select id="getLastMonth" resultType="java.util.Map">
         (
@@ -289,5 +289,15 @@
             financial.`month` = #{param1} AND
             financial.teacherId = #{param2}
     </select>
+
+    <update id="updateFinancial" parameterType="com.hwb.tg.pojo.EditFinancial">
+        update
+            financial
+        set
+            abstractFinancial = #{abstractFinancial},
+            money = #{money}
+        where
+            financialId = #{financialId}
+    </update>
 
 </mapper>

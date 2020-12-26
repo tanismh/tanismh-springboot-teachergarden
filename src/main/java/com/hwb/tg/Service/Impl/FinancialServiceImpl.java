@@ -8,10 +8,7 @@ import com.hwb.tg.Dao.MsgDao;
 import com.hwb.tg.Dao.TeacherDao;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Utils.ImportExcel;
-import com.hwb.tg.pojo.EveryMonthFinancialDetail;
-import com.hwb.tg.pojo.FinancialInfoAdmin;
-import com.hwb.tg.pojo.FinancialReturn;
-import com.hwb.tg.pojo.FinancialUpload;
+import com.hwb.tg.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -270,6 +267,18 @@ public class FinancialServiceImpl implements FinancialService {
             PageHelper.startPage(pageNumber, pageSize);
             return new PageInfo<>(new ArrayList<>());
         }
+    }
+
+    /**
+     * 更新财务信息
+     *
+     * @param financials
+     */
+    @Override
+    public void updateFinancial(List<EditFinancial> financials) {
+        financials.forEach(financial ->{
+            financialDao.updateFinancial(financial);
+        });
     }
 
     /**

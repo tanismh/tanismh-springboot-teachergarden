@@ -5,6 +5,7 @@ import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
+import com.hwb.tg.pojo.TeacherInfoAdmin;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -153,6 +154,14 @@ public class AccountController {
     public ReturnModel getATeacherInfo(@RequestBody Map info ) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         ret.setData(accountServiceImpl.getATeacherInfo((Integer) info.get("teacherId")));
+        return ret;
+    }
+
+    @PostMapping("/admin/updateTeacher")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel updateTeacher(@RequestBody TeacherInfoAdmin teacherInfoAdmin){
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.updateTeacher(teacherInfoAdmin);
         return ret;
     }
 }

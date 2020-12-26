@@ -10,7 +10,8 @@
             admin.adminId,
             admin.`password`,
             admin.department,
-            permission.role
+            permission.rolem,
+            admin.freeze
         FROM
             permission
             INNER JOIN
