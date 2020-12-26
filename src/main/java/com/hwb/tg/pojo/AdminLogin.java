@@ -12,6 +12,7 @@ public class AdminLogin {
     private String loginTime;
     private String role;
     private String department;
+    private Integer freeze;
 
     @Override
     public String toString() {
@@ -22,7 +23,16 @@ public class AdminLogin {
                 ", loginTime='" + loginTime + '\'' +
                 ", role='" + role + '\'' +
                 ", department='" + department + '\'' +
+                ", freeze=" + freeze +
                 '}';
+    }
+
+    public Integer getFreeze() {
+        return freeze;
+    }
+
+    public void setFreeze(Integer freeze) {
+        this.freeze = freeze;
     }
 
     public Integer getAdminId() {

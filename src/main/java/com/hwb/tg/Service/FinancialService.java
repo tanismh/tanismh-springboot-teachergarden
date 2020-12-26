@@ -1,5 +1,7 @@
 package com.hwb.tg.Service;
 
+import com.github.pagehelper.PageInfo;
+import com.hwb.tg.pojo.EditFinancial;
 import com.hwb.tg.pojo.FinancialInfoAdmin;
 import com.hwb.tg.pojo.FinancialReturn;
 import com.hwb.tg.pojo.FinancialUpload;
@@ -78,5 +80,28 @@ public interface FinancialService {
      * @param month 月份
      * @return
      */
-    public List<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month);
+    public PageInfo<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize);
+
+    /**
+     * 删除财务信息
+     */
+    public void deleteFinancial(List<Integer> financialIds);
+
+    /**
+     * 搜索财务信息
+     *
+     * @param teacherId
+     * @param year
+     * @param month
+     * @return
+     */
+    public PageInfo<FinancialInfoAdmin> searchTeacherFinancial(Integer teacherId, Integer year, Integer month, Integer pageSize, Integer pageNumber);
+
+
+    /**
+     * 更新财务信息
+     *
+     * @param financials
+     */
+    public void updateFinancial(List<EditFinancial> financials);
 }

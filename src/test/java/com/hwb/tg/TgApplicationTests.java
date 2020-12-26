@@ -9,10 +9,7 @@ import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Utils.ImportExcel;
-import com.hwb.tg.pojo.AddAdminAccount;
-import com.hwb.tg.pojo.AddTeacher;
-import com.hwb.tg.pojo.EveryMonthFinancialDetail;
-import com.hwb.tg.pojo.FinancialUpload;
+import com.hwb.tg.pojo.*;
 import org.apache.commons.math3.analysis.function.Add;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +113,7 @@ class TgApplicationTests {
     @Test
     public void financial() throws ParseException, SQLIntegrityConstraintViolationException {
         Map<String,Integer> lastMonth = financialDao.getLastMonth();
-        System.out.println(JSON.toJSONString(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"))));
+//        System.out.println(JSON.toJSONString(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"))));
     }
 
     @Test
@@ -126,6 +123,21 @@ class TgApplicationTests {
         addAdminAccount.setPassword("test");
         addAdminAccount.setDepartment("test");
         accountDao.addAdmin(addAdminAccount);
+    }
+
+    @Test
+    public void deleteFinancial(){
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(51);
+        integers.add(52);
+        financialServiceImpl.deleteFinancial(integers);
+    }
+
+    @Test
+    public void getTeacher(){
+        TeacherInfoAdmin aTeacherInfo = accountServiceImpl.getATeacherInfo(26);
+        aTeacherInfo.setName("修改测试");
+        accountServiceImpl.updateTeacher(aTeacherInfo);
     }
 
 }

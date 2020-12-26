@@ -5,12 +5,11 @@ import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
+import com.hwb.tg.pojo.TeacherInfoAdmin;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -18,6 +17,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 何伟斌
@@ -113,9 +113,9 @@ public class AccountController {
             ret = new ReturnModel(CodeEnum.FAILD);
             ret.setMsg("部门信息不能为空");
         } else {
-            if (accountServiceImpl.addAdmin(adminAccount)){
+            if (accountServiceImpl.addAdmin(adminAccount)) {
                 ret = new ReturnModel(CodeEnum.SUCCESS);
-            }else {
+            } else {
                 ret = new ReturnModel(CodeEnum.FAILD);
                 ret.setMsg("添加失败，用户名已存在");
             }
@@ -124,5 +124,44 @@ public class AccountController {
         return ret;
     }
 
+    @GetMapping("/admin/showAllTeacher")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel showAllTeacher(@RequestParam Integer pageSize,
+                                      @RequestParam Integer pageNumber) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        ret.setData(accountServiceImpl.getTeacherInfo(pageSize, pageNumber));
+        return ret;
+    }
 
+    @GetMapping("/admin/freezeTeacher")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel freezeTeacher(@RequestBody Map info) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.freezeTeacher((Integer) info.get("teacherId"));
+        return ret;
+    }
+
+    @GetMapping("/admin/unFreezeTeacher")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel unFreezeTeacher(@RequestBody Map info) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.unFreezeTeacher((Integer) info.get("teacherId"));
+        return ret;
+    }
+
+    @PostMapping("/admin/getATeacherInfo")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel getATeacherInfo(@RequestBody Map info ) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        ret.setData(accountServiceImpl.getATeacherInfo((Integer) info.get("teacherId")));
+        return ret;
+    }
+
+    @PostMapping("/admin/updateTeacher")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel updateTeacher(@RequestBody TeacherInfoAdmin teacherInfoAdmin){
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.updateTeacher(teacherInfoAdmin);
+        return ret;
+    }
 }

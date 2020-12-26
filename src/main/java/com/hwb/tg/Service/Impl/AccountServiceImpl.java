@@ -1,12 +1,11 @@
 package com.hwb.tg.Service.Impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hwb.tg.Dao.AccountDao;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.Utils.ImportExcel;
-import com.hwb.tg.pojo.AddAdminAccount;
-import com.hwb.tg.pojo.AddTeacher;
-import com.hwb.tg.pojo.EveryMonthFinancialDetail;
-import com.hwb.tg.pojo.FinancialUpload;
+import com.hwb.tg.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -120,6 +119,65 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Boolean checkUserName(String userName) {
         return accountDao.checkUserName(userName)==null;
+    }
+
+    /**
+     * 获取教师信息
+     *
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     */
+    @Override
+    public PageInfo<TeacherInfoAdmin> getTeacherInfo(Integer pageSize, Integer pageNumber) {
+        PageHelper.startPage(pageNumber,pageSize);
+        List<TeacherInfoAdmin> infoAdmins = accountDao.getTeacher();
+        PageInfo<TeacherInfoAdmin> pageInfo = new PageInfo<>(infoAdmins);
+        return pageInfo;
+    }
+
+    /**
+     * 冻结教师
+     *
+     * @param teacherId
+     */
+    @Override
+    public void freezeTeacher(Integer teacherId) {
+        accountDao.freezeTeacher(teacherId);
+    }
+
+    /**
+     * 解冻教师
+     *
+     * @param teacherId
+     */
+    @Override
+    public void unFreezeTeacher(Integer teacherId) {
+        accountDao.unFreezeTeacher(teacherId);
+    }
+
+    /**
+     * 获取单个教师全部信息
+     *
+     * @param teacherId
+     * @return
+     */
+    @Override
+    public TeacherInfoAdmin getATeacherInfo(Integer teacherId) {
+        return accountDao.getATeacherInfo(teacherId);
+    }
+
+    /**
+     * 更新教师信息
+     *
+     * @param infoAdmin
+     */
+    @Override
+    public void updateTeacher(TeacherInfoAdmin infoAdmin) {
+        infoAdmin.setEmploymentDate(
+                infoAdmin.getEmploymentDate().split(" ")[0].replace("/","-")
+        );
+        accountDao.updateTeacher(infoAdmin);
     }
 
 }

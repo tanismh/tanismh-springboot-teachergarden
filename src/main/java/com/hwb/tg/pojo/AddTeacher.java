@@ -46,6 +46,35 @@ public class AddTeacher {
      */
     private String email;
 
+    /**
+     * 冻结状态
+     */
+    private Integer freeze;
+
+
+    @Override
+    public String toString() {
+        return "AddTeacher{" +
+                "teacherName='" + teacherName + '\'' +
+                ", jobNumber='" + jobNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", EmpTime='" + EmpTime + '\'' +
+                ", position='" + position + '\'' +
+                ", longTel='" + longTel + '\'' +
+                ", shortTel='" + shortTel + '\'' +
+                ", email='" + email + '\'' +
+                ", freeze=" + freeze +
+                '}';
+    }
+
+    public Integer getFreeze() {
+        return freeze;
+    }
+
+    public void setFreeze(Integer freeze) {
+        this.freeze = freeze;
+    }
+
     public AddTeacher() {
     }
 
@@ -58,20 +87,6 @@ public class AddTeacher {
         this.longTel = longTel;
         this.shortTel = shortTel;
         this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "AddTeacher{" +
-                "teacherName='" + teacherName + '\'' +
-                ", jobNumber='" + jobNumber + '\'' +
-                ", password='" + password + '\'' +
-                ", EmpTime=" + EmpTime +
-                ", position='" + position + '\'' +
-                ", longTel='" + longTel + '\'' +
-                ", shortTel='" + shortTel + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 
     public String getTeacherName() {

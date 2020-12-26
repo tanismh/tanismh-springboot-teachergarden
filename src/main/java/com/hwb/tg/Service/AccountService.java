@@ -1,7 +1,9 @@
 package com.hwb.tg.Service;
 
+import com.github.pagehelper.PageInfo;
 import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
+import com.hwb.tg.pojo.TeacherInfoAdmin;
 import org.apache.commons.math3.analysis.function.Add;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -42,4 +44,42 @@ public interface AccountService {
      * @return
      */
     public Boolean checkUserName(String userName);
+
+    /**
+     * 获取教师信息
+     *
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     */
+    public PageInfo<TeacherInfoAdmin> getTeacherInfo(Integer pageSize, Integer pageNumber);
+
+    /**
+     * 冻结教师
+     *
+     * @param teacherId
+     */
+    public void freezeTeacher(Integer teacherId);
+
+    /**
+     * 解冻教师
+     *
+     * @param teacherId
+     */
+    public void unFreezeTeacher(Integer teacherId);
+
+    /**
+     * 获取单个教师全部信息
+     *
+     * @param teacherId
+     * @return
+     */
+    public TeacherInfoAdmin getATeacherInfo(Integer teacherId);
+
+    /**
+     * 更新教师信息
+     *
+     * @param infoAdmin
+     */
+    public void updateTeacher(TeacherInfoAdmin infoAdmin);
 }

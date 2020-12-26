@@ -28,4 +28,45 @@
             userName = #{param1}
         limit 0,1
     </select>
+
+
+    <select id="getTeacher" resultType="com.hwb.tg.pojo.TeacherInfoAdmin">
+        select
+            *
+        from
+            teacher
+    </select>
+
+    <update id="freezeTeacher">
+        update teacher set freeze = 1 where teacherId = #{param1}
+    </update>
+
+    <update id="unFreezeTeacher">
+        update teacher set freeze = 0 where teacherId = #{param1}
+    </update>
+
+    <select id="getATeacherInfo" resultType="com.hwb.tg.pojo.TeacherInfoAdmin">
+        select
+            *
+        from
+            teacher
+        where
+            teacherId = #{param1}
+    </select>
+
+    <update id="updateTeacher" parameterType="com.hwb.tg.pojo.TeacherInfoAdmin">
+        update
+            teacher
+        set
+            name = #{name},
+            jobNumber=#{jobNumber},
+            employmentDate= STR_TO_DATE(#{employmentDate},'%Y-%m-%d'),
+            professional= #{professional},
+            longTel= #{longTel},
+            shortTel= #{shortTel},
+            email= #{email},
+            freeze= #{freeze}
+        where
+            teacherId = #{teacherId}
+    </update>
 </mapper>
