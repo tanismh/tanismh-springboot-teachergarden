@@ -7,7 +7,8 @@
     <resultMap type="com.hwb.tg.pojo.FinancialReturn" id="financialSelect">
         <id column="month" property="month"/>
         <id column="year" property="year"></id>
-        <collection property="everyMonthFinancialDetails" javaType="java.util.ArrayList" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+        <collection property="everyMonthFinancialDetails" javaType="java.util.ArrayList"
+                    ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
             <id property="moneyAbstract" column="abstractFinancial"/>
             <id property="money" column="money"></id>
             <id column="financialId" property="financialId"></id>
@@ -119,17 +120,18 @@
     </update>
 
     <select id="getLastMonth" resultType="java.util.Map">
-        SELECT DISTINCT
-            `year`,
-            `month`
-        FROM
-            financial
-        ORDER BY
-            financial.`year` DESC,
-            financial.`month` DESC
-        LIMIT 0, 1
+        (
+            SELECT DISTINCT
+                `year`,
+                `month`
+            FROM
+                financial
+            ORDER BY
+                financial.`year` DESC,
+                financial.`month` DESC
+            LIMIT 0, 1
+        )
     </select>
-
 
     <resultMap id="getFinancialInfo" type="com.hwb.tg.pojo.FinancialInfoAdmin">
         <id property="teacherId" column="teacherId"></id>
@@ -137,13 +139,15 @@
         <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn">
             <id property="year" column="year"></id>
             <id property="month" column="month"></id>
-            <collection property="everyMonthFinancialDetails" javaType="java.util.List" ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+            <collection property="everyMonthFinancialDetails" javaType="java.util.List"
+                        ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
                 <id property="moneyAbstract" column="abstractFinancial"/>
                 <id property="money" column="money"></id>
                 <id column="financialId" property="financialId"></id>
             </collection>
         </collection>
     </resultMap>
+
     <select id="getOneMonth" resultMap="getFinancialInfo">
         SELECT
             financial.teacherId,
@@ -162,6 +166,128 @@
         WHERE
             financial.`year` = #{param1} AND
             financial.`month` = #{param2}
+    </select>
+
+    <delete id="deleteFinancial">
+        delete from financial where financialId = #{param1}
+    </delete>
+
+    <select id="getTeacherYearMonth" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId,
+            teacher.`name`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`year` = #{param1} AND
+            financial.`month` = #{param2} AND
+            teacherId = #{param3}
+    </select>
+
+    <select id="getOnlyByMonth" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId,
+            teacher.`name`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`month` = #{param1}
+    </select>
+
+    <select id="getOnlyByYear" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId,
+            teacher.`name`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`year` = #{param1}
+    </select>
+
+    <select id="getOnlyByTeacherId" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId,
+            teacher.`name`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.teacherId = #{param1}
+    </select>
+
+    <select id="getTeacherByIDANdYear" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId,
+            teacher.`name`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`year` = #{param1} AND
+            financial.teacherId = #{param2}
+    </select>
+
+    <select id="getTeacherByIDANdMonth" resultMap="getFinancialInfo">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId,
+            teacher.`name`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`month` = #{param1} AND
+            financial.teacherId = #{param2}
     </select>
 
 </mapper>

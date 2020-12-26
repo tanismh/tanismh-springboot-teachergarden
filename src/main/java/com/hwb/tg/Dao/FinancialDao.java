@@ -38,7 +38,7 @@ public interface FinancialDao {
      *
      * @return
      */
-    public Map<String,Integer> getLastMonth();
+    public Map<String, Integer> getLastMonth();
 
     /**
      * 获取某个月的财务信息
@@ -48,4 +48,58 @@ public interface FinancialDao {
      * @return
      */
     public List<FinancialInfoAdmin> getOneMonth(Integer year, Integer month);
+
+    /**
+     * 删除某个月的财务信息
+     *
+     * @param financialId
+     */
+    public void deleteFinancial(Integer financialId);
+
+    /**
+     * 获取某个教师某个月
+     */
+    public List<FinancialInfoAdmin> getTeacherYearMonth(Integer year, Integer month, Integer teacherId);
+
+    /**
+     * 仅通过月份获取财务
+     *
+     * @param month
+     * @return
+     */
+    public List<FinancialInfoAdmin> getOnlyByMonth(Integer month);
+
+    /**
+     * 仅通过ID获取财务
+     *
+     * @param teacherId
+     * @return
+     */
+    public List<FinancialInfoAdmin> getOnlyByTeacherId(Integer teacherId);
+
+    /**
+     * 仅通过年份获取财务
+     *
+     * @param year
+     * @return
+     */
+    public List<FinancialInfoAdmin> getOnlyByYear(Integer year);
+
+    /**
+     * 通过月份和ID获取
+     *
+     * @param month
+     * @param teacherId
+     * @return
+     */
+    public List<FinancialInfoAdmin> getTeacherByIDANdMonth(Integer month, Integer teacherId);
+
+    /**
+     * 通过年份和ID获取
+     *
+     * @param year
+     * @param teacherId
+     * @return
+     */
+    public List<FinancialInfoAdmin> getTeacherByIDANdYear(Integer year, Integer teacherId);
 }

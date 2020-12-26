@@ -6,6 +6,7 @@ import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.FinancialService;
 import com.hwb.tg.Service.Impl.FinancialServiceImpl;
+import com.hwb.tg.pojo.AdminLogin;
 import com.hwb.tg.pojo.FinancialReturn;
 import com.hwb.tg.pojo.FinancialUpload;
 import com.hwb.tg.pojo.TeacherLoginInfo;
@@ -30,8 +31,8 @@ public class FinancialController {
 
     @RequestMapping(value = "/getFinancial", method = RequestMethod.GET)
     @RequiresRoles(value = {"role:teacher"})
-    public Map getFinancial(@RequestParam(value = "pageSize",required = false) Integer pageSize,
-                            @RequestParam(value = "pageNumber",required = false) Integer pageNumber){
+    public Map getFinancial(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+                            @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
         if (pageNumber == 0)
             pageNumber = 1;
         if (pageSize == 0)
@@ -39,51 +40,51 @@ public class FinancialController {
         HashMap<String, Object> ret = new HashMap<>();
         Integer teacherId = teacherDao.getTeacherIdByJobNumber(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber());
         List<FinancialReturn> financialByTeacherId = financialServiceImpl.getFinancialByTeacherId(teacherId, pageSize, pageNumber);
-        ret.put("code",200);
-        ret.put("msg","成功");
+        ret.put("code", 200);
+        ret.put("msg", "成功");
         Collections.sort(financialByTeacherId, new Comparator<FinancialReturn>() {
             @Override
             public int compare(FinancialReturn o1, FinancialReturn o2) {
-                int f1 = -Integer.compare(o1.getYear(),o2.getYear());
-                if (f1 == 0){
+                int f1 = -Integer.compare(o1.getYear(), o2.getYear());
+                if (f1 == 0) {
                     return -Integer.compare(o1.getMonth(), o2.getMonth());
-                }else
+                } else
                     return f1;
             }
         });
-        ret.put("result",financialByTeacherId);
-        ret.put("totalLength",financialServiceImpl.getFinancialLength(teacherId));
+        ret.put("result", financialByTeacherId);
+        ret.put("totalLength", financialServiceImpl.getFinancialLength(teacherId));
         return ret;
     }
 
     @GetMapping("/searchFinancial")
     @RequiresRoles(value = {"role:teacher"})
-    public Map searchFinancial(@RequestParam(value = "year",required = false) Integer year,
-                               @RequestParam(value = "month",required = false) Integer month,
-                               @RequestParam(value = "pageNumber",required = false) Integer pageNumber,
-                               @RequestParam(value = "pageSize",required = false) Integer pageSize){
+    public Map searchFinancial(@RequestParam(value = "year", required = false) Integer year,
+                               @RequestParam(value = "month", required = false) Integer month,
+                               @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                               @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         HashMap<String, Object> ret = new HashMap<>();
-        ret.put("code",200);
-        ret.put("msg","success");
+        ret.put("code", 200);
+        ret.put("msg", "success");
         List<FinancialReturn> financialReturns = financialServiceImpl.searchFinancial(year, month, pageNumber, pageSize, teacherDao.getTeacherIdByJobNumber(((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber()));
         Collections.sort(financialReturns, new Comparator<FinancialReturn>() {
             @Override
             public int compare(FinancialReturn o1, FinancialReturn o2) {
-                int f1 = -Integer.compare(o1.getYear(),o2.getYear());
-                if (f1 == 0){
+                int f1 = -Integer.compare(o1.getYear(), o2.getYear());
+                if (f1 == 0) {
                     return -Integer.compare(o1.getMonth(), o2.getMonth());
-                }else
+                } else
                     return f1;
             }
         });
-        ret.put("result",financialReturns);
+        ret.put("result", financialReturns);
         return ret;
     }
 
 
     @PostMapping("/admin/uploadFinancialFile")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel uploadFinancial(MultipartFile file){
+    public ReturnModel uploadFinancial(MultipartFile file) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         if (file == null) {
             ret.setCode(CodeEnum.FAILD.getCode());
@@ -113,12 +114,12 @@ public class FinancialController {
             ret.setCode(CodeEnum.FAILD.getCode());
             ret.setMsg("保存文件异常！");
         }
-        try{
+        try {
             ret.setData(financialServiceImpl.uploadFinancialFile(savePath + filename));
-        }catch (Exception e){
+        } catch (Exception e) {
             ret.setMsg("发生异常，请检查模板文件");
             ret.setCode(CodeEnum.FAILD.getCode());
-        }catch (Error e){
+        } catch (Error e) {
             ret.setMsg("发生异常，请检查模板文件");
             ret.setCode(CodeEnum.FAILD.getCode());
         }
@@ -134,12 +135,12 @@ public class FinancialController {
      */
     @PostMapping("/admin/uploadFinancial")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel uploadFinancial(@RequestBody Map<String,List<FinancialUpload>> info){
+    public ReturnModel uploadFinancial(@RequestBody Map<String, List<FinancialUpload>> info) {
         ReturnModel ret = null;
         List<FinancialUpload> uploadList = info.get("financials");
-        if (financialServiceImpl.uploadFinancial(uploadList)){
+        if (financialServiceImpl.uploadFinancial(uploadList)) {
             ret = new ReturnModel(CodeEnum.SUCCESS);
-        }else{
+        } else {
             ret = new ReturnModel(CodeEnum.FAILD);
         }
         return ret;
@@ -147,18 +148,47 @@ public class FinancialController {
 
     @PostMapping("/admin/showAllFinancial")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel showFinancials(){
+    public ReturnModel showFinancials(@RequestBody Map info) {
+        Map<String, Integer> lastMonth = financialServiceImpl.getLastMonth();
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
-        Map<String,Integer> lastMonth = financialServiceImpl.getLastMonth();
-        ret.setData(financialServiceImpl.showAllFinancial(lastMonth.get("year"),lastMonth.get("month")));
+        Integer pageSize = (Integer) (info.get("pageSize"));
+        Integer pageNumber = (Integer) (info.get("pageNumber"));
+        if (pageNumber == null || pageNumber == 0) {
+            pageNumber = 1;
+        }
+        if (pageSize == null || pageSize == 0) {
+            pageSize = 10;
+        }
+        ret.setData(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"), pageNumber, pageSize));
         return ret;
     }
 
     @PostMapping("/admin/deleteFinancial")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel deleteFinancial(@RequestBody Map deleteInfo){
+    public ReturnModel deleteFinancial(@RequestBody Map deleteInfo) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
-        
+        List<Integer> financialIds = (List<Integer>) deleteInfo.get("financialIds");
+        financialServiceImpl.deleteFinancial(financialIds);
         return ret;
     }
+
+    @GetMapping("/admin/searchFinancial")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel showTeacherMonth(@RequestParam(value = "teacherId", required = false) Integer teacherId,
+                                        @RequestParam(value = "year", required = false) Integer year,
+                                        @RequestParam(value = "month", required = false) Integer month,
+                                        @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                        @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        if (pageNumber == null || pageNumber == 0){
+            pageNumber = 1;
+        }
+        if (pageSize == null || pageSize == 0){
+            pageSize = 1000;
+        }
+        ret.setData(financialServiceImpl.searchTeacherFinancial(teacherId, year, month, pageSize, pageNumber));
+        return ret;
+    }
+
+
 }

@@ -116,7 +116,7 @@ class TgApplicationTests {
     @Test
     public void financial() throws ParseException, SQLIntegrityConstraintViolationException {
         Map<String,Integer> lastMonth = financialDao.getLastMonth();
-        System.out.println(JSON.toJSONString(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"))));
+//        System.out.println(JSON.toJSONString(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"))));
     }
 
     @Test
@@ -126,6 +126,22 @@ class TgApplicationTests {
         addAdminAccount.setPassword("test");
         addAdminAccount.setDepartment("test");
         accountDao.addAdmin(addAdminAccount);
+    }
+
+    @Test
+    public void deleteFinancial(){
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(51);
+        integers.add(52);
+        financialServiceImpl.deleteFinancial(integers);
+    }
+
+    @Test
+    public void getTeacher(){
+//        System.out.println(
+//                JSON.toJSONString(accountServiceImpl.getTeacherInfo(10,1))
+//        );
+        accountDao.unFreezeTeacher(22);
     }
 
 }

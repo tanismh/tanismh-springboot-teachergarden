@@ -1,5 +1,8 @@
 package com.hwb.tg.Service.Impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hwb.tg.Dao.FinancialDao;
 import com.hwb.tg.Dao.MsgDao;
 import com.hwb.tg.Dao.TeacherDao;
@@ -205,8 +208,9 @@ public class FinancialServiceImpl implements FinancialService {
      * @return
      */
     @Override
-    public List<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month) {
+    public PageInfo<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize) {
         List<FinancialInfoAdmin> oneMonth = financialDao.getOneMonth(year, month);
+        PageHelper.startPage(pageNumber, pageSize);
         oneMonth.forEach((one) -> {
             one.getFinancialLists().forEach(financialReturn -> {
                 Double sum = 0.0;
@@ -217,7 +221,55 @@ public class FinancialServiceImpl implements FinancialService {
                 financialReturn.setTotalNumber(sum);
             });
         });
-        return oneMonth;
+        PageInfo<FinancialInfoAdmin> pageInfo = new PageInfo<>(oneMonth);
+        return pageInfo;
+    }
+
+    /**
+     * 删除财务信息
+     */
+    @Override
+    public void deleteFinancial(List<Integer> financialIds) {
+        financialIds.forEach(financialId -> {
+            financialDao.deleteFinancial(financialId);
+        });
+    }
+
+    /**
+     * 搜索财务信息
+     *
+     * @param teacherId
+     * @param year
+     * @param month
+     * @return
+     */
+    @Override
+    public PageInfo<FinancialInfoAdmin> searchTeacherFinancial(Integer teacherId, Integer year, Integer month, Integer pageSize, Integer pageNumber) {
+        if ((teacherId != null) && year != null && month != null) {
+            PageHelper.startPage(1, 1);
+            return new PageInfo<FinancialInfoAdmin>(financialDao.getTeacherYearMonth(year, month, teacherId));
+        } else if (teacherId == null && year != null && month != null) {
+            PageHelper.startPage(pageNumber, pageSize);
+            return new PageInfo<>(financialDao.getOneMonth(year, month));
+        } else if (teacherId != null && year == null && month != null) {
+            PageHelper.startPage(pageNumber, pageSize);
+            return new PageInfo<>(financialDao.getTeacherByIDANdMonth(month, teacherId));
+        } else if (teacherId != null && year != null && month == null) {
+            PageHelper.startPage(pageNumber, pageSize);
+            return new PageInfo<>(financialDao.getTeacherByIDANdYear(year, teacherId));
+        } else if (teacherId != null && year == null && month == null) {
+            PageHelper.startPage(pageNumber, pageSize);
+            return new PageInfo<>(financialDao.getOnlyByTeacherId(teacherId));
+        } else if (teacherId == null && year != null && month == null) {
+            PageHelper.startPage(pageNumber, pageSize);
+            return new PageInfo<>(financialDao.getOnlyByYear(year));
+        } else if (teacherId == null && year == null && month != null) {
+            PageHelper.startPage(pageNumber, pageSize);
+            return new PageInfo<>(financialDao.getOnlyByMonth(month));
+        } else {
+            PageHelper.startPage(pageNumber, pageSize);
+            return new PageInfo<>(new ArrayList<>());
+        }
     }
 
     /**
