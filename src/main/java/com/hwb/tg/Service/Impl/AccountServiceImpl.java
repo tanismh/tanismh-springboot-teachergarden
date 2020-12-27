@@ -103,10 +103,10 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Boolean addAdmin(AddAdminAccount adminAccount) {
-        if (checkUserName(adminAccount.getUserName())){
+        if (checkUserName(adminAccount.getUserName())) {
             accountDao.addAdmin(adminAccount);
             return true;
-        }else
+        } else
             return false;
     }
 
@@ -118,7 +118,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Boolean checkUserName(String userName) {
-        return accountDao.checkUserName(userName)==null;
+        return accountDao.checkUserName(userName) == null;
     }
 
     /**
@@ -130,7 +130,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public PageInfo<TeacherInfoAdmin> getTeacherInfo(Integer pageSize, Integer pageNumber) {
-        PageHelper.startPage(pageNumber,pageSize);
+        PageHelper.startPage(pageNumber, pageSize);
         List<TeacherInfoAdmin> infoAdmins = accountDao.getTeacher();
         PageInfo<TeacherInfoAdmin> pageInfo = new PageInfo<>(infoAdmins);
         return pageInfo;
@@ -175,9 +175,21 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updateTeacher(TeacherInfoAdmin infoAdmin) {
         infoAdmin.setEmploymentDate(
-                infoAdmin.getEmploymentDate().split(" ")[0].replace("/","-")
+                infoAdmin.getEmploymentDate().split(" ")[0].replace("/", "-")
         );
         accountDao.updateTeacher(infoAdmin);
+    }
+
+    /**
+     * 删除教师
+     *
+     * @param teacherIds
+     */
+    @Override
+    public void deleteTeacher(List<Integer> teacherIds) {
+        teacherIds.forEach(id -> {
+            accountDao.deleteTeacher(id);
+        });
     }
 
 }

@@ -82,4 +82,11 @@ public interface AccountService {
      * @param infoAdmin
      */
     public void updateTeacher(TeacherInfoAdmin infoAdmin);
+
+    /**
+     * 删除教师
+     *
+     * @param teacherId
+     */
+    public void deleteTeacher(List<Integer> teacherId);
 }

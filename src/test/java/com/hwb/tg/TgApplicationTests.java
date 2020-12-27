@@ -27,6 +27,7 @@ class TgApplicationTests {
 
     @Autowired
     FinancialDao financialDao;
+
     @Test
     void contextLoads() {
         System.out.println(financialDao.getFinancialByTeacherId(1, 0, 10));
@@ -112,12 +113,12 @@ class TgApplicationTests {
 
     @Test
     public void financial() throws ParseException, SQLIntegrityConstraintViolationException {
-        Map<String,Integer> lastMonth = financialDao.getLastMonth();
+        Map<String, Integer> lastMonth = financialDao.getLastMonth();
 //        System.out.println(JSON.toJSONString(financialServiceImpl.showAllFinancial(lastMonth.get("year"), lastMonth.get("month"))));
     }
 
     @Test
-    public void addAdmin(){
+    public void addAdmin() {
         AddAdminAccount addAdminAccount = new AddAdminAccount();
         addAdminAccount.setUserName("子管理测试");
         addAdminAccount.setPassword("test");
@@ -126,7 +127,7 @@ class TgApplicationTests {
     }
 
     @Test
-    public void deleteFinancial(){
+    public void deleteFinancial() {
         ArrayList<Integer> integers = new ArrayList<>();
         integers.add(51);
         integers.add(52);
@@ -134,10 +135,15 @@ class TgApplicationTests {
     }
 
     @Test
-    public void getTeacher(){
+    public void getTeacher() {
         TeacherInfoAdmin aTeacherInfo = accountServiceImpl.getATeacherInfo(26);
         aTeacherInfo.setName("修改测试");
         accountServiceImpl.updateTeacher(aTeacherInfo);
+    }
+
+    @Test
+    public void delete() {
+        accountDao.deleteTeacher(30);
     }
 
 }
