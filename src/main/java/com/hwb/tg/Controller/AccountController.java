@@ -151,7 +151,7 @@ public class AccountController {
 
     @PostMapping("/admin/getATeacherInfo")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel getATeacherInfo(@RequestBody Map info ) {
+    public ReturnModel getATeacherInfo(@RequestBody Map info) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         ret.setData(accountServiceImpl.getATeacherInfo((Integer) info.get("teacherId")));
         return ret;
@@ -159,9 +159,19 @@ public class AccountController {
 
     @PostMapping("/admin/updateTeacher")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel updateTeacher(@RequestBody TeacherInfoAdmin teacherInfoAdmin){
+    public ReturnModel updateTeacher(@RequestBody TeacherInfoAdmin teacherInfoAdmin) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
         accountServiceImpl.updateTeacher(teacherInfoAdmin);
         return ret;
     }
+
+    @PostMapping("/admin/deleteTeacher")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel deleteTeacher(@RequestBody Map info) {
+        List<Integer> teacherIds = (List<Integer>) info.get("teacherIds");
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.deleteTeacher(teacherIds);
+        return ret;
+    }
+
 }

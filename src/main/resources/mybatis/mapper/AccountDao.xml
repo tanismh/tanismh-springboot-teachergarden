@@ -69,4 +69,12 @@
         where
             teacherId = #{teacherId}
     </update>
+
+
+    <update id="deleteTeacher">
+        delete from teacher where teacherId = #{param1};
+        delete from financial where teacherId = #{param1};
+        delete from news where teacherId = #{param1};
+        delete from msg where teacherId = #{param1};
+    </update>
 </mapper>

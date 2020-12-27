@@ -87,7 +87,7 @@ public class NewsController {
             String role = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getRole();
             String userId = "";
             Integer categoryId = (Integer) newsInfo.getClassId();
-            if (role.equals("teacher")) {
+            if (role.equals("role:teacher")) {
                 userId = ((TeacherLoginInfo) SecurityUtils.getSubject().getPrincipal()).getJobNumber(); // jobNumber
                 if (teacherServiceImpl.checkTeacherPermission(userId, categoryId)) {
                     newsServiceImpl.teacherUploadNews(userId, newsInfo);
@@ -150,7 +150,7 @@ public class NewsController {
         Integer newsId = (Integer) changeInfo.get("newsId");
         String newsTitle = (String) changeInfo.get("newsTitle");
         String content = (String) changeInfo.get("content");
-        if (role.equals("teacher")) {
+        if (role.equals("role:teacher")) {
             //验证修改的新闻是否存在
             List<Integer> newIds = new ArrayList<Integer>();
             newIds.add((Integer) changeInfo.get("newsId"));

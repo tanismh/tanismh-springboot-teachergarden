@@ -10,7 +10,7 @@
             admin.adminId,
             admin.`password`,
             admin.department,
-            permission.rolem,
+            permission.role,
             admin.freeze
         FROM
             permission

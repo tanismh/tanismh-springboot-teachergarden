@@ -65,6 +65,7 @@ public class AdminController {
         } catch (IncorrectCredentialsException e) {
             returnModel = new ReturnModel(CodeEnum.Author_ERROR);
         } catch (RuntimeException e) {
+            System.out.println(e);
             returnModel = new ReturnModel(CodeEnum.FAILD);
             returnModel.setMsg("账号冻结，登录失败");
         } catch (Exception e) {

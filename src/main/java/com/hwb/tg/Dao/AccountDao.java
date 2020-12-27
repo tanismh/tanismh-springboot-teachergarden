@@ -64,4 +64,9 @@ public interface AccountDao {
      * 更新教师信息
      */
     public void updateTeacher(TeacherInfoAdmin infoAdmin);
+
+    /**
+     * 真删除教师
+     */
+    public void deleteTeacher(Integer teacherId);
 }
