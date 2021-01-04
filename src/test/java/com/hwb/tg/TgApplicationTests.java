@@ -143,10 +143,8 @@ class TgApplicationTests {
 
     @Test
     public void delete() {
-//        System.out.println(JSON.toJSONString(financialServiceImpl.searchTeacherFinancial(null, null, null, 10, 1)));
-        ArrayList<Integer> integers = new ArrayList<>();
-        integers.add(2);
-        integers.subList(0,3);
+        System.out.println(JSON.toJSONString(financialServiceImpl.searchTeacherFinancial(null, null, null, 10, 1)));
+
     }
 
     @Test
