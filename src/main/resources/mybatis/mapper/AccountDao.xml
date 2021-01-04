@@ -37,6 +37,15 @@
             teacher
     </select>
 
+    <select id="searchTeacher" resultType="com.hwb.tg.pojo.TeacherInfoAdmin">
+        SELECT
+            *
+        FROM
+            teacher
+        WHERE
+            teacher.jobNumber LIKE '%${param1}%'
+    </select>
+
     <update id="freezeTeacher">
         update teacher set freeze = 1 where teacherId = #{param1}
     </update>
@@ -76,5 +85,61 @@
         delete from financial where teacherId = #{param1};
         delete from news where teacherId = #{param1};
         delete from msg where teacherId = #{param1};
+    </update>
+
+    <update id="resetTeacherPsw">
+        update
+            teacher
+        set
+            teacher.password = #{param2}
+        where
+            teacherId = #{param1}
+    </update>
+
+    <select id="getAllCmgt" resultType="com.hwb.tg.pojo.AdminInfo">
+        SELECT
+            admin.adminId,
+            admin.userName,
+            admin.department,
+            admin.freeze
+        FROM
+            admin
+        WHERE
+            admin.permissionId = 2
+    </select>
+
+    <update id="updateCmgt" parameterType="com.hwb.tg.pojo.AdminInfo">
+        update
+            admin
+        set
+            userName = #{userName},
+            department = #{department},
+            freeze = #{freeze}
+        where
+            adminId = #{adminId}
+    </update>
+
+
+    <update id="freezeAdmin">
+        update
+            admin
+        set
+            freeze = 1
+        where
+            adminId = #{param1}
+    </update>
+
+    <update id="unFreezeAdmin">
+        update
+            admin
+        set
+            freeze = 0
+        where
+            adminId = #{param1}
+    </update>
+
+    <update id="deleteAdmin">
+        delete from admin where teacherId = #{param1};
+        delete from news where teacherId = #{param1};
     </update>
 </mapper>

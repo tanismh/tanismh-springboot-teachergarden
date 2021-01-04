@@ -1,10 +1,12 @@
 package com.hwb.tg.Controller;
 
+import com.alibaba.fastjson.JSON;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
 import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
+import com.hwb.tg.pojo.AdminInfo;
 import com.hwb.tg.pojo.TeacherInfoAdmin;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,7 +163,14 @@ public class AccountController {
     @RequiresRoles(value = {"role:bigAdmin"})
     public ReturnModel updateTeacher(@RequestBody TeacherInfoAdmin teacherInfoAdmin) {
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
-        accountServiceImpl.updateTeacher(teacherInfoAdmin);
+        System.out.println(JSON.toJSONString(teacherInfoAdmin));
+        try {
+            accountServiceImpl.updateTeacher(teacherInfoAdmin);
+        } catch (DuplicateKeyException e) {
+            ret = new ReturnModel(CodeEnum.FAILD);
+            ret.setMsg("修改失败，用户名已存在，请修用户名");
+            return ret;
+        }
         return ret;
     }
 
@@ -173,5 +182,84 @@ public class AccountController {
         accountServiceImpl.deleteTeacher(teacherIds);
         return ret;
     }
+
+    @GetMapping("/admin/showAllCmgt")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel showAllCmgt(@RequestParam Integer pageSize,
+                                   @RequestParam Integer pageNumber) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        ret.setData(accountServiceImpl.getAllCmgt(pageSize, pageNumber));
+        return ret;
+    }
+
+    @PostMapping("/admin/resetTeacherPsw")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel restPsw(@RequestBody Map info) {
+        Integer teacherId = (Integer) info.get("teacherId");
+        accountServiceImpl.resetTeacherPsw(teacherId, "123456");
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        ret.setMsg("密码已重置为123456");
+        return ret;
+    }
+
+    @PostMapping("/admin/updateCmgt")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel updateCmgt(@RequestBody AdminInfo adminInfo) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        try {
+            accountServiceImpl.updateCmgt(adminInfo);
+        } catch (DuplicateKeyException e) {
+            ret = new ReturnModel(CodeEnum.FAILD);
+            ret.setMsg("修改失败，用户名已存在，请修用户名");
+            return ret;
+        }
+        return ret;
+    }
+
+    @PostMapping("/admin/freezeAdmin")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel freezeAdmin(@RequestBody Map info) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.freezeAdmin((Integer) info.get("adminId"));
+        return ret;
+    }
+
+    @PostMapping("/admin/unFreezeAdmin")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel unFreezeAdmin(@RequestBody Map info) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.unFreezeAdmin((Integer) info.get("adminId"));
+        return ret;
+    }
+
+    @PostMapping("/admin/deleteAdmin")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel deleteAdmin(@RequestBody Map info) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        accountServiceImpl.deleteAdmin((List<Integer>) info.get("adminId"));
+        return ret;
+    }
+
+    @PostMapping("/admin/searchTeacher")
+    @RequiresRoles(value = {"role:bigAdmin"})
+    public ReturnModel searchTeacher(@RequestBody Map info) {
+        ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);
+        String jobNumber = "";
+        Integer pageNumber = 1;
+        Integer pageSize = 100000;
+        if (info.get("pageNumber") != null) {
+            pageNumber = (Integer) info.get("pageNumber");
+        }
+        if (info.get("pageSize") != null) {
+            pageSize = (Integer) info.get("pageSize");
+        }
+        if (info.get("jobNumber") != null) {
+            jobNumber = (String) info.get("jobNumber");
+            ret.setData(accountServiceImpl.getTeacherInfo(pageSize, pageNumber));
+        }
+        ret.setData(accountServiceImpl.searchTeacher(jobNumber, pageSize, pageNumber));
+        return ret;
+    }
+
 
 }

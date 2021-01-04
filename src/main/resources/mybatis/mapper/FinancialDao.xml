@@ -149,7 +149,7 @@
     </resultMap>
 
     <select id="getOneMonth" resultMap="getFinancialInfo">
-        SELECT
+        (SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -165,7 +165,7 @@
                 financial.teacherId = teacher.teacherId
         WHERE
             financial.`year` = #{param1} AND
-            financial.`month` = #{param2}
+            financial.`month` = #{param2})
     </select>
 
     <delete id="deleteFinancial">
@@ -173,7 +173,7 @@
     </delete>
 
     <select id="getTeacherYearMonth" resultMap="getFinancialInfo">
-        SELECT
+        (SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -190,11 +190,11 @@
         WHERE
             financial.`year` = #{param1} AND
             financial.`month` = #{param2} AND
-            teacherId = #{param3}
+            financial.teacherId = #{param3})
     </select>
 
     <select id="getOnlyByMonth" resultMap="getFinancialInfo">
-        SELECT
+        (SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -209,11 +209,11 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
-            financial.`month` = #{param1}
+            financial.`month` = #{param1})
     </select>
 
     <select id="getOnlyByYear" resultMap="getFinancialInfo">
-        SELECT
+        (SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -228,11 +228,11 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
-            financial.`year` = #{param1}
+            financial.`year` = #{param1})
     </select>
 
     <select id="getOnlyByTeacherId" resultMap="getFinancialInfo">
-        SELECT
+        (SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -247,11 +247,11 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
-            financial.teacherId = #{param1}
+            financial.teacherId = #{param1})
     </select>
 
     <select id="getTeacherByIDANdYear" resultMap="getFinancialInfo">
-        SELECT
+        (SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -267,11 +267,11 @@
                 financial.teacherId = teacher.teacherId
         WHERE
             financial.`year` = #{param1} AND
-            financial.teacherId = #{param2}
+            financial.teacherId = #{param2})
     </select>
 
     <select id="getTeacherByIDANdMonth" resultMap="getFinancialInfo">
-        SELECT
+       ( SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -287,7 +287,7 @@
                 financial.teacherId = teacher.teacherId
         WHERE
             financial.`month` = #{param1} AND
-            financial.teacherId = #{param2}
+            financial.teacherId = #{param2})
     </select>
 
     <update id="updateFinancial" parameterType="com.hwb.tg.pojo.EditFinancial">
@@ -299,5 +299,7 @@
         where
             financialId = #{financialId}
     </update>
+
+
 
 </mapper>

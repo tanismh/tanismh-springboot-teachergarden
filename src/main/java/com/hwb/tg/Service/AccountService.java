@@ -3,6 +3,7 @@ package com.hwb.tg.Service;
 import com.github.pagehelper.PageInfo;
 import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
+import com.hwb.tg.pojo.AdminInfo;
 import com.hwb.tg.pojo.TeacherInfoAdmin;
 import org.apache.commons.math3.analysis.function.Add;
 
@@ -89,4 +90,54 @@ public interface AccountService {
      * @param teacherId
      */
     public void deleteTeacher(List<Integer> teacherId);
+
+    /**
+     * 重置密码
+     */
+    public String resetTeacherPsw(Integer teacherId, String psw);
+
+    /**
+     * 获取全部子管理员
+     *
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     */
+    public PageInfo<AdminInfo> getAllCmgt(Integer pageSize, Integer pageNumber);
+
+    /**
+     * 更新管理员信息
+     *
+     * @param adminInfo
+     */
+    public void updateCmgt(AdminInfo adminInfo);
+
+    /**
+     * 解冻管理员
+     *
+     * @param adminId
+     */
+    public void unFreezeAdmin(Integer adminId);
+
+    /**
+     * 冻结管理员
+     *
+     * @param adminId
+     */
+    public void freezeAdmin(Integer adminId);
+
+    /**
+     * 删除管理员
+     *
+     * @param adminId
+     */
+    public void deleteAdmin(List<Integer>  adminId);
+
+    /**
+     * 搜索教师
+     *
+     * @param jobNumber
+     * @return
+     */
+    public PageInfo<TeacherInfoAdmin> searchTeacher(String jobNumber,Integer pageSize, Integer pageNumber);
 }

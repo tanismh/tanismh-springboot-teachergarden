@@ -192,4 +192,87 @@ public class AccountServiceImpl implements AccountService {
         });
     }
 
+    /**
+     * 重置密码
+     *
+     * @param teacherId
+     */
+    @Override
+    public String resetTeacherPsw(Integer teacherId, String psw) {
+        accountDao.resetTeacherPsw(teacherId, psw);
+        return psw;
+    }
+
+    /**
+     * 获取全部子管理员
+     *
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     */
+    @Override
+    public PageInfo<AdminInfo> getAllCmgt(Integer pageSize, Integer pageNumber) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<AdminInfo> infoAdmins = accountDao.getAllCmgt();
+        PageInfo<AdminInfo> pageInfo = new PageInfo<>(infoAdmins);
+        return pageInfo;
+    }
+
+    /**
+     * 更新管理员信息
+     *
+     * @param adminInfo
+     */
+    @Override
+    public void updateCmgt(AdminInfo adminInfo) {
+        accountDao.updateCmgt(adminInfo);
+    }
+
+    /**
+     * 解冻管理员
+     *
+     * @param adminId
+     */
+    @Override
+    public void unFreezeAdmin(Integer adminId) {
+        accountDao.unFreezeAdmin(adminId);
+    }
+
+    /**
+     * 冻结管理员
+     *
+     * @param adminId
+     */
+    @Override
+    public void freezeAdmin(Integer adminId) {
+        accountDao.freezeAdmin(adminId);
+    }
+
+    /**
+     * 删除管理员
+     *
+     * @param adminIds
+     */
+    @Override
+    public void deleteAdmin(List<Integer> adminIds) {
+        adminIds.forEach(adminId -> {
+            accountDao.deleteTeacher(adminId);
+        });
+    }
+
+    /**
+     * 搜索教师
+     *
+     * @param jobNumber
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     */
+    @Override
+    public PageInfo<TeacherInfoAdmin> searchTeacher(String jobNumber, Integer pageSize, Integer pageNumber) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<TeacherInfoAdmin> infoAdmins = accountDao.searchTeacher(jobNumber);
+        return new PageInfo<TeacherInfoAdmin>(infoAdmins);
+    }
+
 }

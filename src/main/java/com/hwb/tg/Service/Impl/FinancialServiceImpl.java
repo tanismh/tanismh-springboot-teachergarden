@@ -1,5 +1,6 @@
 package com.hwb.tg.Service.Impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -166,8 +167,9 @@ public class FinancialServiceImpl implements FinancialService {
         /* 检查教师ID是否都存在 */
         for (FinancialUpload f :
                 uploadList) {
-            if (f.getTeacherId() == null)
+            if (f.getJobNumber() == null)
                 return false;
+            f.setTeacherId(teacherDao.getTeacherIdByJobNumber(f.getJobNumber()));
         }
         try {
             for (FinancialUpload f :
@@ -243,29 +245,41 @@ public class FinancialServiceImpl implements FinancialService {
     @Override
     public PageInfo<FinancialInfoAdmin> searchTeacherFinancial(Integer teacherId, Integer year, Integer month, Integer pageSize, Integer pageNumber) {
         if ((teacherId != null) && year != null && month != null) {
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherYearMonth(year, month, teacherId));
             PageHelper.startPage(1, 1);
-            return new PageInfo<FinancialInfoAdmin>(financialDao.getTeacherYearMonth(year, month, teacherId));
+            return new PageInfo<FinancialInfoAdmin>(financialInfoAdmins);
         } else if (teacherId == null && year != null && month != null) {
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOneMonth(year, month));
             PageHelper.startPage(pageNumber, pageSize);
-            return new PageInfo<>(financialDao.getOneMonth(year, month));
+            return new PageInfo<>(financialInfoAdmins);
         } else if (teacherId != null && year == null && month != null) {
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherByIDANdMonth(month, teacherId));
             PageHelper.startPage(pageNumber, pageSize);
-            return new PageInfo<>(financialDao.getTeacherByIDANdMonth(month, teacherId));
+            return new PageInfo<>(financialInfoAdmins);
         } else if (teacherId != null && year != null && month == null) {
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherByIDANdYear(year, teacherId));
             PageHelper.startPage(pageNumber, pageSize);
-            return new PageInfo<>(financialDao.getTeacherByIDANdYear(year, teacherId));
+            return new PageInfo<>(financialInfoAdmins);
         } else if (teacherId != null && year == null && month == null) {
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByTeacherId(teacherId));
             PageHelper.startPage(pageNumber, pageSize);
-            return new PageInfo<>(financialDao.getOnlyByTeacherId(teacherId));
+            return new PageInfo<>(financialInfoAdmins);
         } else if (teacherId == null && year != null && month == null) {
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByYear(year));
+            System.out.println(JSON.toJSONString(financialInfoAdmins));
             PageHelper.startPage(pageNumber, pageSize);
-            return new PageInfo<>(financialDao.getOnlyByYear(year));
+            return new PageInfo<>(financialInfoAdmins);
         } else if (teacherId == null && year == null && month != null) {
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByMonth(month));
             PageHelper.startPage(pageNumber, pageSize);
-            return new PageInfo<>(financialDao.getOnlyByMonth(month));
+            return new PageInfo<>(financialInfoAdmins);
         } else {
-            PageHelper.startPage(pageNumber, pageSize);
-            return new PageInfo<>(new ArrayList<>());
+            PageHelper.startPage(1, 2);
+            ArrayList<FinancialInfoAdmin> financialInfoAdmins = new ArrayList<>();
+            financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());financialInfoAdmins.add(new FinancialInfoAdmin());
+            PageInfo<FinancialInfoAdmin> info = new PageInfo<>();
+            info.setList(financialInfoAdmins);
+            return info;
         }
     }
 
@@ -302,5 +316,19 @@ public class FinancialServiceImpl implements FinancialService {
             }
         }
         return index;
+    }
+
+    public List<FinancialInfoAdmin> countTotal (List<FinancialInfoAdmin>  teacherYearMonth){
+        teacherYearMonth.forEach((one) -> {
+            one.getFinancialLists().forEach(financialReturn -> {
+                Double sum = 0.0;
+                for (EveryMonthFinancialDetail every :
+                        financialReturn.getEveryMonthFinancialDetails()) {
+                    sum += every.getMoney();
+                }
+                financialReturn.setTotalNumber(sum);
+            });
+        });
+        return teacherYearMonth;
     }
 }

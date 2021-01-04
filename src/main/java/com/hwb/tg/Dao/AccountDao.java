@@ -2,6 +2,7 @@ package com.hwb.tg.Dao;
 
 import com.hwb.tg.pojo.AddAdminAccount;
 import com.hwb.tg.pojo.AddTeacher;
+import com.hwb.tg.pojo.AdminInfo;
 import com.hwb.tg.pojo.TeacherInfoAdmin;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -69,4 +70,55 @@ public interface AccountDao {
      * 真删除教师
      */
     public void deleteTeacher(Integer teacherId);
+
+    /**
+     * 管理员重置教师密码
+     *
+     * @param teacherId
+     * @param psw
+     */
+    public void resetTeacherPsw(Integer teacherId, String psw);
+
+    /**
+     * 获取所有子管理员
+     *
+     * @return
+     */
+    public List<AdminInfo> getAllCmgt();
+
+    /**
+     * 更新管理员信息
+     *
+     * @param adminInfo
+     */
+    public void updateCmgt(AdminInfo adminInfo);
+
+    /**
+     * 冻结管理员
+     *
+     * @param adminId
+     */
+    public void freezeAdmin(Integer adminId);
+
+    /**
+     * 解冻管理员
+     *
+     * @param adminId
+     */
+    public void unFreezeAdmin(Integer adminId);
+
+    /**
+     * 删除管理员
+     *
+     * @param admin
+     */
+    public void deleteAdmin(Integer admin);
+
+    /**
+     * 搜索教师（模糊）
+     *
+     * @param jobNumber
+     * @return
+     */
+    public List<TeacherInfoAdmin> searchTeacher(String jobNumber);
 }

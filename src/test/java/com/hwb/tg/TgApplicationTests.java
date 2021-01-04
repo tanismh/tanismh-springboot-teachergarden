@@ -137,13 +137,19 @@ class TgApplicationTests {
     @Test
     public void getTeacher() {
         TeacherInfoAdmin aTeacherInfo = accountServiceImpl.getATeacherInfo(26);
-        aTeacherInfo.setName("修改测试");
+        aTeacherInfo.setName("修改测试1234");
         accountServiceImpl.updateTeacher(aTeacherInfo);
     }
 
     @Test
     public void delete() {
-        accountDao.deleteTeacher(30);
+        System.out.println(JSON.toJSONString(financialServiceImpl.searchTeacherFinancial(null, null, null, 10, 1)));
+
+    }
+
+    @Test
+    public void test(){
+        System.out.println(JSON.toJSONString(accountServiceImpl.searchTeacher("123",1,1000)));
     }
 
 }
