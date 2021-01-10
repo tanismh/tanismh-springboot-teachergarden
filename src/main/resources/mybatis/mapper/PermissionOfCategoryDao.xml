@@ -46,7 +46,15 @@
             category
             ON
                 permissionofcategory.categoryId = category.categoryId
-        where
-            adminId = #{param1}
+        WHERE
+            adminId = #{param1} AND
+            category.categoryId NOT IN (
+            SELECT DISTINCT
+                category.parentId
+            FROM
+                category
+            WHERE
+                category.parentId IS NOT NULL
+            )
     </select>
 </mapper>

@@ -6,6 +6,8 @@ import com.hwb.tg.pojo.TeacherLoginInfo;
 import com.hwb.tg.pojo.UpdateTeacherInfoParam;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 public class TeacherController {
+
+    protected static final Logger logger = LoggerFactory.getLogger(TeacherController.class);
+
     @Autowired
     TeacherService teacherServiceImpl;
 
@@ -23,7 +28,6 @@ public class TeacherController {
      *
      * @return
      */
-    @ResponseBody
     @RequiresRoles("role:teacher")
     @RequestMapping(value = "/getTeacherInfo", method = RequestMethod.POST)
     public Map getTeacherInfo() {
@@ -34,11 +38,11 @@ public class TeacherController {
         returnMap.put("info", teacherInfoByTeacherId);
         returnMap.put("code",200);
         returnMap.put("msg","处理成功");
+        logger.info(String.valueOf(returnMap));
         return returnMap;
     }
 
 
-    @ResponseBody
     @RequiresRoles("role:teacher")
     @RequestMapping(value = "/teacherResetPsw", method = RequestMethod.POST)
     public Map teacherResetPsw(@RequestBody Map info) {
@@ -68,7 +72,6 @@ public class TeacherController {
     }
 
 
-    @ResponseBody
     @RequestMapping(value = "/changeInfo", method = RequestMethod.POST)
     public Map changeInfo(@RequestBody UpdateTeacherInfoParam updateTeacherInfoParam) {
         HashMap<String, Object> ret = new HashMap<>();

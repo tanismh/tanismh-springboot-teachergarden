@@ -1,5 +1,6 @@
 package com.hwb.tg.Service.Impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hwb.tg.Dao.AccountDao;
@@ -90,6 +91,9 @@ public class AccountServiceImpl implements AccountService {
 
             } else {
                 teacher.setEmpTime("1977/01/01");
+            }
+            if (teacher.getJobNumber() == null || teacher.getTeacherName() == null) {
+                throw new RuntimeException();
             }
             accountDao.batchAddTeacher(teacher);
 
@@ -255,8 +259,10 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void deleteAdmin(List<Integer> adminIds) {
+        System.out.println(JSON.toJSONString(adminIds));
         adminIds.forEach(adminId -> {
-            accountDao.deleteTeacher(adminId);
+            accountDao.deleteAdmin(adminId);
+            System.out.println(JSON.toJSONString(adminId));
         });
     }
 

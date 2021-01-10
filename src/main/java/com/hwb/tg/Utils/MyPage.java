@@ -29,6 +29,7 @@ public class MyPage<T> {
     private boolean hasNextPage;
 
     public MyPage(List<T> list, int pageSize, int pageNum) {
+        System.out.println(list);
         //开始位置
         int begin = (pageNum - 1) * pageSize;
         //结束位置
@@ -42,7 +43,7 @@ public class MyPage<T> {
             setPages((int) Math.ceil(this.total / this.pageSize));
         else
             setPages(0);
-        if (begin >= list.size() || begin <= 0) {
+        if (begin >= list.size() || begin < 0) {
             setSize(0);
             setList(new ArrayList<T>());
         }else{

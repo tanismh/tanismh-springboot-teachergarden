@@ -56,7 +56,7 @@ public class ShiroRealm extends AuthorizingRealm {
             }else if (teacherInfo.getFreeze()==1){
                 throw new RuntimeException();
             }
-            return new SimpleAuthenticationInfo(teacherInfo, "123456a", "ShiroRealm");
+            return new SimpleAuthenticationInfo(teacherInfo, teacherInfo.getPassword(), "ShiroRealm");
         }
     }
 

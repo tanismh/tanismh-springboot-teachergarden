@@ -9,6 +9,8 @@ import com.hwb.tg.pojo.AddTeacher;
 import com.hwb.tg.pojo.AdminInfo;
 import com.hwb.tg.pojo.TeacherInfoAdmin;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,8 @@ import java.util.Map;
  */
 @RestController
 public class AccountController {
+    protected static final Logger logger = LoggerFactory.getLogger(TeacherController.class);
+
 
     @Autowired
     AccountService accountServiceImpl;
@@ -90,6 +94,10 @@ public class AccountController {
         } catch (SQLIntegrityConstraintViolationException e) {
             ReturnModel ret = new ReturnModel(CodeEnum.FAILD);
             ret.setMsg("添加失败，工号重复，请修改工号");
+            return ret;
+        } catch (RuntimeException e) {
+            ReturnModel ret = new ReturnModel(CodeEnum.FAILD);
+            ret.setMsg("添加失败，工号或姓名为空！");
             return ret;
         }
     }
@@ -258,6 +266,8 @@ public class AccountController {
             ret.setData(accountServiceImpl.getTeacherInfo(pageSize, pageNumber));
         }
         ret.setData(accountServiceImpl.searchTeacher(jobNumber, pageSize, pageNumber));
+        System.out.println(JSON.toJSONString(ret));
+        logger.info(JSON.toJSONString(ret));
         return ret;
     }
 

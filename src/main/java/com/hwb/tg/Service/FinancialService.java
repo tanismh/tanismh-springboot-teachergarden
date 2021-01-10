@@ -1,6 +1,7 @@
 package com.hwb.tg.Service;
 
 import com.github.pagehelper.PageInfo;
+import com.hwb.tg.Utils.MyPage;
 import com.hwb.tg.pojo.EditFinancial;
 import com.hwb.tg.pojo.FinancialInfoAdmin;
 import com.hwb.tg.pojo.FinancialReturn;
@@ -95,7 +96,7 @@ public interface FinancialService {
      * @param month
      * @return
      */
-    public PageInfo<FinancialInfoAdmin> searchTeacherFinancial(Integer teacherId, Integer year, Integer month, Integer pageSize, Integer pageNumber);
+    public MyPage<FinancialInfoAdmin> searchTeacherFinancial(Integer teacherId, Integer year, Integer month, Integer pageSize, Integer pageNumber);
 
 
     /**
