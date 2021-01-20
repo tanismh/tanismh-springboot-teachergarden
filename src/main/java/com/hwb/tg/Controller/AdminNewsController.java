@@ -117,7 +117,7 @@ public class AdminNewsController {
 
         //验证是否是自己发布的新闻
         List<Integer> newsIds = new ArrayList<Integer>();
-        newsIds.add(newsType);
+        newsIds.add(newsId);
         Integer adminId = ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId();
         if (newsServiceImpl.checkDeletePermissionAdmin(adminId, newsIds)) {
             // 如果是自己发布的新闻允许修改
@@ -181,14 +181,12 @@ public class AdminNewsController {
     @RequestMapping("/BigAdmminChangeNews")
     @RequiresRoles(value = {"role:bigAdmin"})
     public ReturnModel BigAdmminChangeNews(@RequestBody Map changeInfo) {
-        Integer newsType = (Integer) changeInfo.get("newsType");
+        Integer newsType = (Integer) changeInfo.get("classId");
         Integer newsId = (Integer) changeInfo.get("newsId");
         String newsTitle = (String) changeInfo.get("newsTitle");
         String content = (String) changeInfo.get("content");
 
         //验证是否是自己发布的新闻
-        List<Integer> newsIds = new ArrayList<Integer>();
-        newsIds.add(newsType);
         Integer adminId = ((AdminLogin) SecurityUtils.getSubject().getPrincipal()).getAdminId();
         newsServiceImpl.updateNews(newsId, newsTitle, newsType, content);
         ReturnModel ret = new ReturnModel(CodeEnum.SUCCESS);

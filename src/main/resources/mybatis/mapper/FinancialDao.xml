@@ -136,6 +136,7 @@
     <resultMap id="getFinancialInfo" type="com.hwb.tg.pojo.FinancialInfoAdmin">
         <id property="teacherId" column="teacherId"></id>
         <result column="name" property="teacherName"></result>
+        <result column="jobNumber" property="jobNumber"></result>
         <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn">
             <id property="year" column="year"></id>
             <id property="month" column="month"></id>
@@ -156,7 +157,8 @@
             financial.abstractFinancial,
             financial.money,
             financial.financialId,
-            teacher.`name`
+            teacher.`name`,
+            teacher.`jobNumber`
         FROM
             financial
             INNER JOIN

@@ -139,7 +139,7 @@
     </update>
 
     <update id="deleteAdmin">
-        delete from admin where teacherId = #{param1};
-        delete from news where teacherId = #{param1};
+        delete from admin where adminId = #{param1};
+        delete from news where adminId = #{param1};
     </update>
 </mapper>

@@ -208,7 +208,7 @@ public class FinancialServiceImpl implements FinancialService {
      * @return
      */
     @Override
-    public PageInfo<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize) {
+    public MyPage<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize) {
         List<FinancialInfoAdmin> oneMonth = financialDao.getOneMonth(year, month);
         PageHelper.startPage(pageNumber, pageSize);
         oneMonth.forEach((one) -> {
@@ -221,7 +221,7 @@ public class FinancialServiceImpl implements FinancialService {
                 financialReturn.setTotalNumber(sum);
             });
         });
-        PageInfo<FinancialInfoAdmin> pageInfo = new PageInfo<>(oneMonth);
+        MyPage<FinancialInfoAdmin> pageInfo = new MyPage<>(oneMonth, pageSize, pageNumber);
         return pageInfo;
     }
 
@@ -250,26 +250,26 @@ public class FinancialServiceImpl implements FinancialService {
             return new MyPage<FinancialInfoAdmin>(financialInfoAdmins, 1, 1);
         } else if (teacherId == null && year != null && month != null) {
             List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOneMonth(year, month));
-            return new MyPage<>(financialInfoAdmins,pageSize,pageNumber);
+            return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId != null && year == null && month != null) {
             List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherByIDANdMonth(month, teacherId));
-            return new MyPage<>(financialInfoAdmins,pageSize,pageNumber);
+            return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId != null && year != null && month == null) {
             List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherByIDANdYear(year, teacherId));
-            return new MyPage<>(financialInfoAdmins,pageSize,pageNumber);
+            return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId != null && year == null && month == null) {
             List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByTeacherId(teacherId));
-            return new MyPage<>(financialInfoAdmins,pageSize,pageNumber);
+            return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId == null && year != null && month == null) {
             List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByYear(year));
             System.out.println(JSON.toJSONString(financialInfoAdmins));
-            return new MyPage<>(financialInfoAdmins,pageSize,pageNumber);
+            return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId == null && year == null && month != null) {
             List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByMonth(month));
-            return new MyPage<>(financialInfoAdmins,pageSize,pageNumber);
+            return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else {
             ArrayList<FinancialInfoAdmin> objects = new ArrayList<>();
-            return new MyPage<>(objects,pageSize,pageNumber);
+            return new MyPage<>(objects, pageSize, pageNumber);
         }
     }
 

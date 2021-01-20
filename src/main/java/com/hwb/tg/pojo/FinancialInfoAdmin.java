@@ -27,8 +27,23 @@ public class FinancialInfoAdmin {
                 "teacherId=" + teacherId +
                 ", teacherName='" + teacherName + '\'' +
                 ", financialLists=" + financialLists +
+                ", jobNumber='" + jobNumber + '\'' +
                 '}';
     }
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
+
+    /**
+     * 工号
+     * @return
+     */
+    private String jobNumber;
 
     public String getTeacherName() {
         return teacherName;
