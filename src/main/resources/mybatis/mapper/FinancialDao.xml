@@ -149,8 +149,42 @@
         </collection>
     </resultMap>
 
-    <select id="getOneMonth" resultMap="getFinancialInfo">
-        (SELECT
+    <!--
+
+        getOneMonth
+        管理员获取财务信息的第一个map
+        第一步联合财务信息表获取教师ID、姓名等
+
+     -->
+    <resultMap id="newFinancialMapFirst" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <result column="name" property="teacherName"></result>
+        <result column="jobNumber" property="jobNumber"></result>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn"
+                    select="getOneMonthSecond" column="{teacherId = teacherId, month = month , year = year}">
+        </collection>
+    </resultMap>
+
+    <!--
+
+        getOneMonth
+        管理员获取财务信息第二步
+        封装列表中的内容
+
+    -->
+    <resultMap id="newFinancialMapSecond" type="com.hwb.tg.pojo.FinancialReturn">
+        <id property="year" column="year"></id>
+        <id property="month" column="month"></id>
+        <collection property="everyMonthFinancialDetails" javaType="java.util.List"
+                    ofType="com.hwb.tg.pojo.EveryMonthFinancialDetail">
+            <id property="moneyAbstract" column="abstractFinancial"/>
+            <id property="money" column="money"></id>
+            <id column="financialId" property="financialId"></id>
+        </collection>
+    </resultMap>
+
+    <select id="getOneMonthSecond" resultMap="newFinancialMapSecond">
+        SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -166,23 +200,36 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
-            financial.`year` = #{param1} AND
-            financial.`month` = #{param2})
+            financial.`year` = #{year} AND
+            financial.`month` = #{month} AND
+			teacher.teacherId = #{teacherId}
     </select>
 
-    <delete id="deleteFinancial">
-        delete from financial where financialId = #{param1}
-    </delete>
-
-    <select id="getTeacherYearMonth" resultMap="getFinancialInfo">
-        (SELECT
+    <select id="getOneMonth" resultMap="newFinancialMapFirst">
+         SELECT DISTINCT
             financial.teacherId,
+            teacher.`name`,
+            teacher.`jobNumber`,
             financial.`year`,
-            financial.`month`,
-            financial.abstractFinancial,
-            financial.money,
-            financial.financialId,
-            teacher.`name`
+            financial.`month`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`year` = #{param1} AND
+            financial.`month` = #{param2}
+    </select>
+
+    <select id="getTeacherYearMonth" resultMap="newFinancialMapFirst">
+        (SELECT DISTINCT
+            financial.teacherId,
+            teacher.`name`,
+            teacher.`jobNumber`,
+            financial.`year`,
+            financial.`month`
         FROM
             financial
             INNER JOIN
@@ -195,8 +242,35 @@
             financial.teacherId = #{param3})
     </select>
 
-    <select id="getOnlyByMonth" resultMap="getFinancialInfo">
-        (SELECT
+
+    <!--
+        仅通过月份查询
+    -->
+    <resultMap id="getOnlyByMonthReturnMapFirst" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <result column="name" property="teacherName"></result>
+        <result column="jobNumber" property="jobNumber"></result>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn"
+                    select="getOnlyByMonthSQLSecond" column="{teacherId = teacherId, month = month }">
+        </collection>
+    </resultMap>
+    <select id="getOnlyByMonth" resultMap="getOnlyByMonthReturnMapFirst">
+        SELECT DISTINCT
+            financial.teacherId,
+            teacher.`name`,
+            teacher.`jobNumber`,
+            financial.`month`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`month` = #{param1}
+    </select>
+    <select id="getOnlyByMonthSQLSecond" resultMap="newFinancialMapSecond">
+        SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -211,11 +285,38 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
-            financial.`month` = #{param1})
+            financial.`month` = #{month} AND
+			teacher.teacherId = #{teacherId}
     </select>
 
-    <select id="getOnlyByYear" resultMap="getFinancialInfo">
-        (SELECT
+    <!--
+        仅通过年份查询
+    -->
+    <resultMap id="getOnlyByYearReturnMapFirst" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <result column="name" property="teacherName"></result>
+        <result column="jobNumber" property="jobNumber"></result>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn"
+                    select="getOnlyByYearSQLSecond" column="{teacherId = teacherId, year = year }">
+        </collection>
+    </resultMap>
+    <select id="getOnlyByYear" resultMap="getOnlyByYearReturnMapFirst">
+        SELECT DISTINCT
+            financial.teacherId,
+            teacher.`name`,
+            teacher.`jobNumber`,
+            financial.`year`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`year` = #{param1}
+    </select>
+    <select id="getOnlyByYearSQLSecond" resultMap="newFinancialMapSecond">
+        SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -230,11 +331,43 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
-            financial.`year` = #{param1})
+            financial.`year` = #{year} AND
+			teacher.teacherId = #{teacherId}
     </select>
 
-    <select id="getOnlyByTeacherId" resultMap="getFinancialInfo">
-        (SELECT
+    <!--
+        按年份查询结束
+    -->
+
+
+
+    <!--
+        仅通过ID查询
+    -->
+    <resultMap id="getOnlyByTeacherIdReturnMapFirst" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <result column="name" property="teacherName"></result>
+        <result column="jobNumber" property="jobNumber"></result>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn"
+                    select="getOnlyByTeacherIdSQLSecond" column="{teacherId = teacherId}">
+        </collection>
+    </resultMap>
+    <select id="getOnlyByTeacherId" resultMap="getOnlyByTeacherIdReturnMapFirst">
+        SELECT DISTINCT
+            financial.teacherId,
+            teacher.`name`,
+            teacher.`jobNumber`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+            financial.`teacherId` = #{param1}
+    </select>
+    <select id="getOnlyByTeacherIdSQLSecond" resultMap="newFinancialMapSecond">
+        SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -249,18 +382,32 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
-            financial.teacherId = #{param1})
+			teacher.teacherId = #{teacherId}
     </select>
 
-    <select id="getTeacherByIDANdYear" resultMap="getFinancialInfo">
-        (SELECT
+
+    <!--
+        仅通过ID查询结束
+    -->
+
+
+    <!--
+        仅通过ID和年份查询
+    -->
+    <resultMap id="getTeacherByIDANdYearReturnMapFirst" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <result column="name" property="teacherName"></result>
+        <result column="jobNumber" property="jobNumber"></result>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn"
+                    select="getTeacherByIDANdYearSQLSecond" column="{teacherId = teacherId, year = year}">
+        </collection>
+    </resultMap>
+    <select id="getTeacherByIDANdYear" resultMap="getTeacherByIDANdYearReturnMapFirst">
+        SELECT DISTINCT
             financial.teacherId,
-            financial.`year`,
-            financial.`month`,
-            financial.abstractFinancial,
-            financial.money,
-            financial.financialId,
-            teacher.`name`
+            teacher.`name`,
+            teacher.`jobNumber`,
+            financial.`year`
         FROM
             financial
             INNER JOIN
@@ -271,9 +418,8 @@
             financial.`year` = #{param1} AND
             financial.teacherId = #{param2})
     </select>
-
-    <select id="getTeacherByIDANdMonth" resultMap="getFinancialInfo">
-       ( SELECT
+    <select id="getTeacherByIDANdYearSQLSecond" resultMap="newFinancialMapSecond">
+        SELECT
             financial.teacherId,
             financial.`year`,
             financial.`month`,
@@ -288,9 +434,61 @@
             ON
                 financial.teacherId = teacher.teacherId
         WHERE
+			teacher.teacherId = #{teacherId},
+			financial.`year` = #{year}
+    </select>
+    <!--
+            仅通过ID和年份查询结束
+    -->
+
+
+    <!--
+        仅通过ID和月份查询
+    -->
+    <resultMap id="getTeacherByIDANdMonthReturnMapFirst" type="com.hwb.tg.pojo.FinancialInfoAdmin">
+        <id property="teacherId" column="teacherId"></id>
+        <result column="name" property="teacherName"></result>
+        <result column="jobNumber" property="jobNumber"></result>
+        <collection property="financialLists" javaType="java.util.List" ofType="com.hwb.tg.pojo.FinancialReturn"
+                    select="getTeacherByIDANdMonthSQLSecond" column="{teacherId = teacherId, month = month}">
+        </collection>
+    </resultMap>
+    <select id="getTeacherByIDANdMonth" resultMap="getTeacherByIDANdMonthReturnMapFirst">
+        SELECT DISTINCT
+            financial.teacherId,
+            teacher.`name`,
+            teacher.`jobNumber`,
+            financial.`month`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
             financial.`month` = #{param1} AND
             financial.teacherId = #{param2})
     </select>
+    <select id="getTeacherByIDANdMonthSQLSecond" resultMap="newFinancialMapSecond">
+        SELECT
+            financial.teacherId,
+            financial.`year`,
+            financial.`month`,
+            financial.abstractFinancial,
+            financial.money,
+            financial.financialId,
+            teacher.`name`
+        FROM
+            financial
+            INNER JOIN
+            teacher
+            ON
+                financial.teacherId = teacher.teacherId
+        WHERE
+			teacher.teacherId = #{teacherId},
+			financial.`month` = #{month}
+    </select>
+
 
     <update id="updateFinancial" parameterType="com.hwb.tg.pojo.EditFinancial">
         update
@@ -303,5 +501,7 @@
     </update>
 
 
-
+    <delete id="deleteFinancial">
+        delete from financial where financialId = #{param1}
+    </delete>
 </mapper>

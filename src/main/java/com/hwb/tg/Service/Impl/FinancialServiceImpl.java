@@ -208,9 +208,9 @@ public class FinancialServiceImpl implements FinancialService {
      * @return
      */
     @Override
-    public MyPage<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize) {
-        List<FinancialInfoAdmin> oneMonth = financialDao.getOneMonth(year, month);
+    public PageInfo<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize) {
         PageHelper.startPage(pageNumber, pageSize);
+        List<FinancialInfoAdmin> oneMonth = financialDao.getOneMonth(year, month);
         oneMonth.forEach((one) -> {
             one.getFinancialLists().forEach(financialReturn -> {
                 Double sum = 0.0;
@@ -221,7 +221,7 @@ public class FinancialServiceImpl implements FinancialService {
                 financialReturn.setTotalNumber(sum);
             });
         });
-        MyPage<FinancialInfoAdmin> pageInfo = new MyPage<>(oneMonth, pageSize, pageNumber);
+        PageInfo<FinancialInfoAdmin> pageInfo = new PageInfo<>(oneMonth);
         return pageInfo;
     }
 
@@ -246,26 +246,26 @@ public class FinancialServiceImpl implements FinancialService {
     @Override
     public MyPage<FinancialInfoAdmin> searchTeacherFinancial(Integer teacherId, Integer year, Integer month, Integer pageSize, Integer pageNumber) {
         if ((teacherId != null) && year != null && month != null) {
-            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherYearMonth(year, month, teacherId));
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherYearMonth(year, month, teacherId));  //finish
             return new MyPage<FinancialInfoAdmin>(financialInfoAdmins, 1, 1);
         } else if (teacherId == null && year != null && month != null) {
-            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOneMonth(year, month));
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOneMonth(year, month));   //finish
             return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId != null && year == null && month != null) {
             List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherByIDANdMonth(month, teacherId));
             return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId != null && year != null && month == null) {
-            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherByIDANdYear(year, teacherId));
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getTeacherByIDANdYear(year, teacherId));  //finish
             return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId != null && year == null && month == null) {
-            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByTeacherId(teacherId));
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByTeacherId(teacherId));  //finish
             return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId == null && year != null && month == null) {
-            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByYear(year));
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByYear(year));   //finish
             System.out.println(JSON.toJSONString(financialInfoAdmins));
             return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else if (teacherId == null && year == null && month != null) {
-            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByMonth(month));
+            List<FinancialInfoAdmin> financialInfoAdmins = countTotal(financialDao.getOnlyByMonth(month));  //finish
             return new MyPage<>(financialInfoAdmins, pageSize, pageNumber);
         } else {
             ArrayList<FinancialInfoAdmin> objects = new ArrayList<>();

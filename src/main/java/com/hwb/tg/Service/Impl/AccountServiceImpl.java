@@ -92,7 +92,7 @@ public class AccountServiceImpl implements AccountService {
             } else {
                 teacher.setEmpTime("1977/01/01");
             }
-            if (teacher.getJobNumber() == null || teacher.getTeacherName() == null) {
+            if (teacher.getJobNumber() == null || teacher.getTeacherName() == null || teacher.getJobNumber().equals("") || teacher.getTeacherName().equals("")) {
                 throw new RuntimeException();
             }
             accountDao.batchAddTeacher(teacher);

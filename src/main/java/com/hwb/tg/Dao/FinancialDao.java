@@ -7,6 +7,7 @@ import com.hwb.tg.pojo.FinancialReturn;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,4 +109,7 @@ public interface FinancialDao {
      * 编辑财务信息
      */
     public void updateFinancial(EditFinancial editFinancial);
+
+
+    public List<FinancialInfoAdmin> getTeacherYearMonthTest(Integer year, Integer month, Integer teacherId);
 }

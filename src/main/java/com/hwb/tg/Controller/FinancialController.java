@@ -171,7 +171,7 @@ public class FinancialController {
 
     @GetMapping("/admin/searchFinancial")
     @RequiresRoles(value = {"role:bigAdmin"})
-    public ReturnModel showTeacherMonth(@RequestParam(value = "teacherId", required = false) Integer teacherId,
+    public ReturnModel showTeacherMonth(@RequestParam(value = "jobNumber", required = false) String jobNumber,
                                         @RequestParam(value = "year", required = false) Integer year,
                                         @RequestParam(value = "month", required = false) Integer month,
                                         @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -182,6 +182,12 @@ public class FinancialController {
         }
         if (pageSize == null || pageSize == 0) {
             pageSize = 1000;
+        }
+        Integer teacherId = null;
+        if (jobNumber !=null ||!jobNumber.equals("")){
+            teacherId = teacherDao.getTeacherIdByJobNumber(jobNumber);
+        }else{
+            teacherId = null;
         }
         ret.setData(financialServiceImpl.searchTeacherFinancial(teacherId, year, month, pageSize, pageNumber));
         return ret;

@@ -81,7 +81,7 @@ public interface FinancialService {
      * @param month 月份
      * @return
      */
-    public MyPage<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize);
+    public PageInfo<FinancialInfoAdmin> showAllFinancial(Integer year, Integer month, Integer pageNumber, Integer pageSize);
 
     /**
      * 删除财务信息

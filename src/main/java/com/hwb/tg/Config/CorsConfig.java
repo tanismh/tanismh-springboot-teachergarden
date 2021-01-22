@@ -1,5 +1,8 @@
 package com.hwb.tg.Config;
 
+import com.hwb.tg.Controller.TeacherController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +18,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author 何伟斌
@@ -23,6 +30,7 @@ import java.io.IOException;
 
 @Configuration
 public class CorsConfig {
+    protected static final Logger logger = LoggerFactory.getLogger(CorsConfig.class);
 
 //    @Bean
     public WebMvcConfigurer CORSConfigurer() {
@@ -62,8 +70,55 @@ public class CorsConfig {
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json");
                 //此行代码确保请求可以继续执行至Controller
-                System.out.println(System.getProperty("user.dir"));
+                //System.out.println(System.getProperty("user.dir"));
                 filterChain.doFilter(request, response);
+                String ip = request.getHeader("x-forwarded-for");
+                //System.out.println("x-forwarded-for ip: " + ip);
+                if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+                    // 多次反向代理后会有多个ip值，第一个ip才是真实ip
+                    if( ip.indexOf(",")!=-1 ){
+                        ip = ip.split(",")[0];
+                    }
+                }
+                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                    ip = request.getHeader("Proxy-Client-IP");
+                    //System.out.println("Proxy-Client-IP ip: " + ip);
+                }
+                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                    ip = request.getHeader("WL-Proxy-Client-IP");
+                    //System.out.println("WL-Proxy-Client-IP ip: " + ip);
+                }
+                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                    ip = request.getHeader("HTTP_CLIENT_IP");
+                    //System.out.println("HTTP_CLIENT_IP ip: " + ip);
+                }
+                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                    ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+                    //System.out.println("HTTP_X_FORWARDED_FOR ip: " + ip);
+                }
+                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                    ip = request.getHeader("X-Real-IP");
+                    //System.out.println("X-Real-IP ip: " + ip);
+                }
+                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                    ip = request.getRemoteAddr();
+                    //System.out.println("getRemoteAddr ip: " + ip);
+                }
+                //获取本地ip
+                if("0:0:0:0:0:0:0:1".equals(ip)){
+                    try {
+                        ip =  InetAddress.getLocalHost().getHostAddress();
+                    } catch (UnknownHostException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    //System.out.println("getLocal ip: " + ip);
+                }
+                Date d = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String dateNowStr = sdf.format(d);
+                logger.info("IP:" + ip+"\t时间:"+dateNowStr+"\t路径:" +request.getRequestURI());
+
 
             }
         });

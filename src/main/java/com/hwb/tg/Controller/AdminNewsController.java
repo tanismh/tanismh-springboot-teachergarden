@@ -110,7 +110,7 @@ public class AdminNewsController {
     @RequiresRoles(value = {"role:admin", "role:bigAdmin"}, logical = Logical.OR)
     public ReturnModel cmgtChangeNews(@RequestBody Map changeInfo) {
         ReturnModel ret = null;
-        Integer newsType = (Integer) changeInfo.get("newsType");
+        Integer newsType = (Integer) changeInfo.get("classId");
         Integer newsId = (Integer) changeInfo.get("newsId");
         String newsTitle = (String) changeInfo.get("newsTitle");
         String content = (String) changeInfo.get("content");
