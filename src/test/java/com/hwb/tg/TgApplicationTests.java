@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.hwb.tg.Bean.Financial;
 import com.hwb.tg.Dao.AccountDao;
 import com.hwb.tg.Dao.FinancialDao;
+import com.hwb.tg.Dao.NewsDao;
 import com.hwb.tg.Model.CodeEnum;
 import com.hwb.tg.Model.ReturnModel;
 import com.hwb.tg.Service.AccountService;
@@ -151,11 +152,12 @@ class TgApplicationTests {
 
     }
 
+    @Autowired
+    NewsDao newsDao;
+
     @Test
     public void test() {
-        PageHelper.startPage(1,2);
-        List<FinancialInfoAdmin> financialInfoAdmins = financialDao.getOnlyByYear(2021);
-        System.out.println(JSON.toJSONString(new PageInfo<>(financialInfoAdmins)));
+        System.out.println(newsDao.searchByNewsType("hhhhh", 4, 0, 10));
     }
 
 }

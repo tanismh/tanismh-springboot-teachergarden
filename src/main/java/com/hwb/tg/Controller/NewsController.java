@@ -110,7 +110,7 @@ public class NewsController {
     @RequestMapping(value = "/searchNews", method = RequestMethod.POST)
     public Map searchNews(@RequestBody Map searchInfo) {
         HashMap<String, Object> ret = new HashMap<>();
-        if (searchInfo.get("newsType") == null) {
+        if (searchInfo.get("newsType") == null || searchInfo.get("newsType").equals("")) {
             NewsTitleResult newsTitleResult = newsServiceImpl.searchNews(searchInfo);
             ret.put("data", newsTitleResult);
         } else {

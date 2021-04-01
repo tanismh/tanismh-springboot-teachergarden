@@ -231,7 +231,7 @@ public class FinancialServiceImpl implements FinancialService {
     @Override
     public void deleteFinancial(List<Integer> financialIds) {
         financialIds.forEach(financialId -> {
-            financialDao.deleteFinancial(financialId);
+                financialDao.deleteFinancial(financialId);
         });
     }
 

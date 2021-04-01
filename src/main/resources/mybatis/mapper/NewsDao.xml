@@ -158,7 +158,7 @@
             (
                 news.content LIKE '%${param1}%'
                 OR
-                news.content LIKE '%${param1}%'
+                news.newsTitle LIKE '%${param1}%'
             )
 	        and
 	        category.categoryId = #{param2}
