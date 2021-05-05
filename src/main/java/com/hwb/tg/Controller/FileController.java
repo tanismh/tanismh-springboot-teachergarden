@@ -54,7 +54,7 @@ public class FileController {
             e.printStackTrace();
             return ret;
         }
-        ret.put("location", "http://47.97.97.208:8082/ssm_learning/file/" + filename);
+        ret.put("location", "http://10.21.15.33:8082/ssm_learning/file/" + filename);
         ret.put("name", fname);
         return ret;
     }
